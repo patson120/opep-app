@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "859902524197",
+    "project_id": "opepapp-e55f0",
+    "storage_bucket": "opepapp-e55f0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859902524197:android:223d3ffda876b67d7fb8cc",
+        "android_client_info": {
+          "package_name": "com.opep.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCp2GGlaGJTbzgorMSUfcktxPoNfrM708c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
