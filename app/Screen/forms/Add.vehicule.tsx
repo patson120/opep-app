@@ -23,7 +23,7 @@ import DropdownComponent from "../../Components/DropdownComponent"
 import * as DocumentPicker from 'expo-document-picker'
 
 import SimpleToast from 'react-native-simple-toast'
-import { Car, FileDataType, GlobalUserState, Model, UserRootState } from "../../types"
+import { Car, FileDataType, GlobalUserState, Model, User, UserRootState } from "../../types"
 import { uploadToFirebase } from "../../config/firebase"
 
 const { width } = Dimensions.get('window')
@@ -46,7 +46,7 @@ const VehiculeForm: FC<any> = () => {
     const [image, setImage] = useState<string | null>(null)
     const [fileName, setFileName] = useState<string>('')
 
-    const user = useSelector<GlobalUserState>(state => state.User)
+    const user: User = useSelector<GlobalUserState>(state => state.User.user) as User
 
     const [data, setData] = useState([
         { label: 'Item 1', value: '1' },
@@ -85,17 +85,13 @@ const VehiculeForm: FC<any> = () => {
 
         const car: Car = {
             _id: immatriculation.trim(),
-            model:  model!,
+            model: model!,
             image: uploadResp.downloadUrl,
-            userId: password.trim(),
+            userId: user._id!
         };
-        
-        
-         // Add a new document in collection USER
-         await setDoc(doc(database, TABLE.USER, `${user._id}`), {
-            ...user,
-            password: passwordHash
-        })
+
+        // Add a new document in collection USER
+        await setDoc(doc(database, TABLE.CAR, `${car._id}`), { ...user })
 
         setIsLoading(false)
     }
@@ -156,7 +152,7 @@ const VehiculeForm: FC<any> = () => {
                         />
                         <TouchableOpacity
                             className="absolute top-2 right-2"
-                            onPress={() => {setImage(null); setFileName('')}}
+                            onPress={() => { setImage(null); setFileName('') }}
                         >
                             <Icon.XCircle color={"#930627"} strokeWidth={1} width={50} height={50} />
                         </TouchableOpacity>
