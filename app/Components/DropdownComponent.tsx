@@ -8,23 +8,21 @@ import { Dropdown } from 'react-native-element-dropdown'
 import * as Icon from "react-native-feather"
 import { COLORS } from '../Constants/Colors'
 import { FONTS } from '../Constants/Font'
+import { DropdownItemType, Model } from '../types'
 
-type ItemType = {
-  label: string;
-  value: string;
-}
+
 
 type PropsType = {
-  data: ItemType[];
+  data: DropdownItemType[];
   label: string;
-  onChangeValue: (value: string | null) => void;
+  onChangeValue: (value: Model | null) => void;
   placeholder: string
 }
 
 
 const DropdownComponent: FC<PropsType> = ({ data, label, onChangeValue, placeholder }) => {
 
-  const [value, setValue] = useState<String | null>(null);
+  const [value, setValue] = useState<string | null>(null);
   const [isFocus, setIsFocus] = useState(false);
 
   const renderLabel = () => {
@@ -62,7 +60,7 @@ const DropdownComponent: FC<PropsType> = ({ data, label, onChangeValue, placehol
         onChange={item => {
           setValue(item.value);
           setIsFocus(false);
-          onChangeValue(item.value);
+          onChangeValue({_id: item.value, libelle: item.label} as Model);
         }}
         renderLeftIcon={() => (
           <View className="h-5 mr-2">

@@ -1,5 +1,5 @@
 import { Slice, createSlice } from "@reduxjs/toolkit";
-import { UserRootState } from "../types";
+import { GlobalUserState, UserRootState } from "../types";
 
 
 
@@ -21,7 +21,7 @@ export const userSlice: Slice<UserRootState> = createSlice({
     }
 });
 
-export const selectUser = (state: UserRootState) => state.user;
+export const selectUser = (state: GlobalUserState) => state.User.user;
 // export const selectAllUsers = (state: RootStateType) => state.allUers;
 // export const selectAllFriends = (state: RootStateType) => state.friends;
 

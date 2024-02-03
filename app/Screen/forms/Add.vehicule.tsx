@@ -1,7 +1,7 @@
 
 
 import { StatusBar } from "expo-status-bar"
-import React, { FC, useCallback, useState } from "react"
+import React, { FC, useCallback, useEffect, useState } from "react"
 import {
     Dimensions,
     Image,
@@ -23,40 +23,37 @@ import DropdownComponent from "../../Components/DropdownComponent"
 import * as DocumentPicker from 'expo-document-picker'
 
 import SimpleToast from 'react-native-simple-toast'
-import { Car, FileDataType, GlobalUserState, Model, User, UserRootState } from "../../types"
-import { uploadToFirebase } from "../../config/firebase"
+import { Car, DropdownItemType, FileDataType, GlobalUserState, Marque, Model, User, UserRootState } from "../../types"
+import { uploadToFirebase, database } from "../../config/firebase"
 
-const { width } = Dimensions.get('window')
-
-import { database } from '../../config/firebase'
-import uuid from 'react-native-uuid'
-
-import { doc, setDoc } from "firebase/firestore"
+import { doc, setDoc, query, collection, getDocs } from "firebase/firestore"
 import { TABLE } from "../../Constants/Table"
 import { useSelector } from "react-redux"
 import { selectUser } from "../../Redux/users"
 
 
 
+const { width } = Dimensions.get('window')
+
 const VehiculeForm: FC<any> = () => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [model, setModel] = useState<Model | null>()
+    const [selectedModel, setSelectedModel] = useState<Model | null>()
+    const [selectedMarque, setSelectedMarque] = useState<Marque | null>()
     const [immatriculation, setImmatriculation] = useState<string>('')
     const [image, setImage] = useState<string | null>(null)
     const [fileName, setFileName] = useState<string>('')
 
-    const user: User = useSelector<GlobalUserState>(state => state.User.user) as User
+    const user: User = useSelector<GlobalUserState>(selectUser) as User
 
-    const [data, setData] = useState([
-        { label: 'Item 1', value: '1' },
-        { label: 'Item 2', value: '2' },
-        { label: 'Item 3', value: '3' },
-        { label: 'Item 4', value: '4' },
-        { label: 'Item 5', value: '5' },
-        { label: 'Item 6', value: '6' },
-        { label: 'Item 7', value: '7' },
-        { label: 'Item 8', value: '8' },
+    const [marques, setMarques] = useState<DropdownItemType[]>([
+        { label: 'marque 1', value: '1' },
+        { label: 'marque 2', value: '2' }
+    ])
+
+    const [models, setModels] = useState<DropdownItemType[]>([
+        { label: 'modèle 1', value: '1' },
+        { label: 'modèle 2', value: '2' }
     ])
 
     const handleDocumentSelection = useCallback(async () => {
@@ -79,22 +76,44 @@ const VehiculeForm: FC<any> = () => {
     const handleSubmit = async () => {
         setIsLoading(true)
         const uploadResp = await uploadToFirebase(image, fileName, 'OpepMedia/images')
-        console.log('====================================')
-        console.log(uploadResp.downloadUrl,)
-        console.log('====================================')
-
         const car: Car = {
             _id: immatriculation.trim(),
-            model: model!,
+            model: selectedModel!,
+            marque: selectedMarque!,
             image: uploadResp.downloadUrl,
             userId: user._id!
         };
-
         // Add a new document in collection USER
-        await setDoc(doc(database, TABLE.CAR, `${car._id}`), { ...user })
-
+        await setDoc(doc(database, TABLE.CAR, `${car._id}`), { ...car })
         setIsLoading(false)
     }
+
+
+    const getAllMarques = async () => {
+        const marquesQuery = query(collection(database, TABLE.CAR_MARQUE));
+        const querySnapshot = await getDocs(marquesQuery);
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data())
+            setMarques(prev => prev.concat({ label: doc.data().libelle, value: doc.id }))
+        })
+    }
+
+    const getAllModels = async () => {
+        const modelsQuery = query(collection(database, TABLE.CAR_MODEL));
+        const querySnapshot = await getDocs(modelsQuery);
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data())
+            setModels(prev => prev.concat({ label: doc.data().libelle, value: doc.id }))
+        })
+    }
+
+
+    useEffect(() => {
+        // getAllMarques()
+        // getAllModels()
+    })
 
 
     return (
@@ -123,16 +142,17 @@ const VehiculeForm: FC<any> = () => {
                 </View>
                 <DropdownComponent
                     label="Marque"
-                    data={data}
-                    onChangeValue={setModel}
+                    data={marques}
+                    onChangeValue={setSelectedMarque}
                     placeholder="Entrer la marque..."
                 />
-                <InputField
-                    label={'Modèle'}
-                    placeholder="Ex: Classe C"
-                    data={''}
-                    setData={() => { }}
+                 <DropdownComponent
+                    label="Modèle"
+                    data={models}
+                    onChangeValue={setSelectedModel}
+                    placeholder="Entrer le modèle..."
                 />
+               
                 <InputField
                     label={'Immatriculation'}
                     placeholder="Ex: OU466GT"

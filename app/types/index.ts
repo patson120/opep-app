@@ -10,6 +10,7 @@ export type User = {
 export type Car = {
     _id: string;
     model: Model;
+    marque: Marque;
     image: string;
     userId: string
 }
@@ -18,7 +19,10 @@ export type Model = {
     _id: string;
     libelle: string;
 }
-
+export type Marque = {
+    _id: string;
+    libelle: string;
+}
 
 
 export type ActionType = {
@@ -41,4 +45,10 @@ export type FileDataType = {
     name: string;
     size: number;
     uri: string;
+}
+
+
+export type DropdownItemType = {
+    label: string;
+    value: string;
 }
