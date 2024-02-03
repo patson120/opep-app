@@ -48,10 +48,6 @@ const VehiculeForm: FC<any> = () => {
 
     const user = useSelector<GlobalUserState>(state => state.User)
 
-    console.log('====================================');
-    console.log(user);
-    console.log('====================================');
-
     const [data, setData] = useState([
         { label: 'Item 1', value: '1' },
         { label: 'Item 2', value: '2' },

@@ -26,9 +26,7 @@ const database = getFirestore(app);
 const uploadToFirebase = async (uri, fileName, bucket, onProgress) => {
   const fetchResponse = await fetch(uri);
   const theBlob = await fetchResponse.blob();
-
   const imageRef = ref(getStorage(), `${bucket}/${fileName}`);
-
   const uploadTask = uploadBytesResumable(imageRef, theBlob);
 
   return new Promise((resolve, reject) => {
