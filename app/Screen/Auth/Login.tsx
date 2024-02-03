@@ -1,5 +1,4 @@
 
-
 import React, { useState } from "react"
 
 import {
@@ -7,59 +6,69 @@ import {
     Text,
     Image,
     SafeAreaView,
-    KeyboardAvoidingView,
     Platform,
     TouchableOpacity
 }
     from 'react-native'
-import { FONTS } from "../Constants/Font";
-import InputField from "../Components/InputField";
-import { COLORS } from "../Constants/Colors";
-import Navigation from "../Service/Navigation";
-import PrimaryButton from "../Components/PrimaryButton";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { FONTS } from "../../Constants/Font"
+import InputField from "../../Components/InputField"
+import { COLORS } from "../../Constants/Colors"
+import Navigation from "../../Service/Navigation"
+import PrimaryButton from "../../Components/PrimaryButton"
 
-import { database } from '../config/firebase'
-import { getDocs, query, where, collection } from "firebase/firestore";
+import { database } from '../../config/firebase'
+import { getDocs, query, where, collection } from "firebase/firestore"
 
 import bcrypt from 'react-native-bcrypt'
 import SimpleToast from 'react-native-simple-toast'
-import { TABLE } from "../Constants/Table";
-import { StatusBar } from "expo-status-bar";
+import { TABLE } from "../../Constants/Table"
+import Auth from "../../Service/Auth"
+import { User } from "../../types"
+import { useDispatch } from "react-redux"
+import { setUser } from "../../Redux/users"
 
 
 const Login = () => {
+    const dispatch = useDispatch()
     const [contact, setContact] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const handleSubmit = async () => {
         setIsLoading(true)
-        const userQuery = query(collection(database, TABLE.USER), where("contact", "==", contact.trim()))
-        const querySnapshot = await getDocs(userQuery);
 
-        querySnapshot.forEach((doc) => {
-            const user: User = doc.data() as User;
-            bcrypt.compare(password, user.password, (err: Error, pass: boolean) => {
-                if (!err) {
-                    SimpleToast.show("Connecté avec succès", 3);
-                    setContact('')
-                    setPassword('')
-                    setTimeout(() => {
-                        Navigation.navigate("Home");
-                    }, 1000);
-                }
-                else {
-                    SimpleToast.show("Mot de passe incorrect", 3);
-                }
-                setIsLoading(false)
-            })
-        });
+        if (contact.trim() !== "" && password.trim() !== "") {
+            const userQuery = query(collection(database, TABLE.USER), where("contact", "==", contact.trim()))
+            const querySnapshot = await getDocs(userQuery)
+
+            querySnapshot.forEach((doc) => {
+                const user: User = doc.data() as User;
+                bcrypt.compare(password, user.password, async (err: Error, pass: boolean) => {
+                    if (!err) {
+                        setContact('')
+                        setPassword('')
+                        dispatch(setUser(user))
+                        await Auth.setAccount(user)
+                        SimpleToast.show("Connecté avec succès", 3)
+                    }
+                    else {
+                        SimpleToast.show("Mot de passe incorrect", 3)
+                    }
+                    setIsLoading(false)
+                })
+            });
+        }
+        else {
+            SimpleToast.show("Email and password can not be empty !", 3)
+            setIsLoading(false);
+        }
     }
 
     return (
         <SafeAreaView className="flex-1">
             {/* <StatusBar style="auto" /> */}
-            <KeyboardAvoidingView
+            <KeyboardAwareScrollView
                 className="flex-1"
                 behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
                 <View
@@ -68,7 +77,7 @@ const Login = () => {
                     <View
                         className="w-24 mb-4">
                         <Image
-                            source={require('../Assets/img/logo1 1.png')}
+                            source={require('../../Assets/img/logo1 1.png')}
                             className="mb-5 w-full"
                         />
                     </View>
@@ -134,7 +143,7 @@ const Login = () => {
                     </View>
 
                 </View>
-            </KeyboardAvoidingView>
+            </KeyboardAwareScrollView>
         </SafeAreaView>
     )
 }

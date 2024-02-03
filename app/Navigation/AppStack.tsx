@@ -19,6 +19,7 @@ const AppStack = () => {
                 },
                 ...TransitionPresets.SlideFromRightIOS,
             }}
+            initialRouteName="Home"
         >
             <Stack.Screen name="Home" component={Home}
                 options={{

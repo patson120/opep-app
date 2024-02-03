@@ -7,25 +7,26 @@ import {
     Text,
     Image,
     SafeAreaView,
-    KeyboardAvoidingView,
     Platform,
     TouchableOpacity,
     Alert
 }
     from 'react-native'
-import { FONTS } from "../Constants/Font";
-import InputField from "../Components/InputField";
-import { COLORS } from "../Constants/Colors";
-import Navigation from "../Service/Navigation";
-import PrimaryButton from "../Components/PrimaryButton";
-import { database } from '../config/firebase'
-import uuid from 'react-native-uuid';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { FONTS } from "../../Constants/Font"
+import InputField from "../../Components/InputField"
+import { COLORS } from "../../Constants/Colors"
+import Navigation from "../../Service/Navigation"
+import PrimaryButton from "../../Components/PrimaryButton"
+import { database } from '../../config/firebase'
+import uuid from 'react-native-uuid'
 
-import { doc, setDoc } from "firebase/firestore";
-import { TABLE } from "../Constants/Table";
+import { doc, setDoc } from "firebase/firestore"
+import { TABLE } from "../../Constants/Table"
 
 import bcrypt from 'react-native-bcrypt'
 import SimpleToast from 'react-native-simple-toast'
+import { User } from "../../types"
 
 
 const Signup = () => {
@@ -40,6 +41,7 @@ const Signup = () => {
         setIsLoading(true)
 
         const user: User = {
+            _id: uuid.v4().toString(),
             name: name.trim(),
             contact: contact.trim(),
             password: password.trim(),
@@ -49,16 +51,16 @@ const Signup = () => {
         bcrypt.hash(user.password, 10, async (err: Error, passwordHash: string | undefined) => {
             if (!err) {
                 // Add a new document in collection USER
-                await setDoc(doc(database, TABLE.USER, `${uuid.v4()}`), {
+                await setDoc(doc(database, TABLE.USER, `${user._id}`), {
                     ...user,
                     password: passwordHash
                 })
 
-                SimpleToast.show('Compte créé avec succès', 3);
+                SimpleToast.show('Compte créé avec succès', 3)
                 setContact('')
                 setPassword('')
                 setName('')
-                Navigation.navigate("Login");
+                Navigation.navigate("Login")
             } else {
                 Alert.alert(
                     "Erreur d'inscription",
@@ -71,7 +73,7 @@ const Signup = () => {
 
     return (
         <SafeAreaView className="flex-1">
-            <KeyboardAvoidingView
+            <KeyboardAwareScrollView
                 className="flex-1"
                 behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
 
@@ -82,7 +84,7 @@ const Signup = () => {
                         className="w-24 mb-4"
                     >
                         <Image
-                            source={require('../Assets/img/logo1 1.png')}
+                            source={require('../../Assets/img/logo1 1.png')}
                             className="mb-5 w-full"
                         />
 
@@ -139,7 +141,7 @@ const Signup = () => {
                     </View>
 
                 </View>
-            </KeyboardAvoidingView>
+            </KeyboardAwareScrollView>
         </SafeAreaView>
     )
 }

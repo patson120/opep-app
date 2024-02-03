@@ -2,9 +2,8 @@
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
 import React from "react"
 import { COLORS } from "../Constants/Colors"
-import Login from "../Screen/Login"
-import { Text } from "react-native"
-import Signup from "../Screen/Signup"
+import Login from "../Screen/Auth/Login"
+import Signup from "../Screen/Auth/Signup"
 
 const Stack = createStackNavigator()
 
@@ -21,6 +20,7 @@ const AuthStack = () => {
                 },
                 ...TransitionPresets.SlideFromRightIOS,
             }}
+            initialRouteName="Login"
         >
             <Stack.Screen name="Login" component={Login}
                 options={{
@@ -32,7 +32,6 @@ const AuthStack = () => {
                     headerShown: false,
                 }}
             />
-
         </Stack.Navigator>
     )
 }

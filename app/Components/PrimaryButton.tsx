@@ -9,14 +9,15 @@ import { COLORS } from "../Constants/Colors"
 type PropsType = {
     onPress: () => void,
     label: string,
-    isLoading: boolean
+    isLoading: boolean,
+    marginTop?: number
 }
 
-const PrimaryButton: FC<PropsType> = ({ onPress, label, isLoading }) => {
+const PrimaryButton: FC<PropsType> = ({ onPress, label, isLoading, marginTop }) => {
     return (
         <TouchableOpacity
             style={{ backgroundColor: COLORS.secondary }}
-            className='mt-8 h-12 justify-center items-center rounded-xl'
+            className={( marginTop != undefined ? `mt-[${marginTop}] ` : 'mt-8 ') + ' h-12 justify-center items-center rounded-xl '}
             onPress={onPress}
         >
             {isLoading ?
