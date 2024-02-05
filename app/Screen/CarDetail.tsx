@@ -1,7 +1,7 @@
 
 
 import { View, Text, SafeAreaView, Image, TouchableOpacity, GestureResponderEvent, ScrollView, Pressable } from 'react-native'
-import React, { FC, useState } from 'react'
+import React, { useState } from 'react'
 import { COLORS } from '../Constants/Colors'
 import { StatusBar } from 'expo-status-bar'
 import { useRoute } from '@react-navigation/native'

@@ -8,6 +8,7 @@ import { COLORS } from '../Constants/Colors'
 import Home from '../Screen/Home'
 import Profile from '../Screen/Profile'
 import VehiculeForm from '../Screen/forms/VehiculeForm'
+import DepenseForm from '../Screen/forms/DepenseForm'
 
 
 
@@ -42,7 +43,7 @@ const MainContainer = () => {
     >
 
       <Tab.Screen name='Home' component={Home} options={{ headerShown: false}} />
-      <Tab.Screen name='Depense' component={VehiculeForm} options={{ headerShown: false }} />
+      <Tab.Screen name='Depense' component={DepenseForm} options={{ headerShown: false }} />
       <Tab.Screen name='Stats' component={VehiculeForm} options={{ headerShown: false }} />
       <Tab.Screen name='Profile' component={Profile} options={{ headerShown: false }} />
 

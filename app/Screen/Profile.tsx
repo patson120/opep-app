@@ -1,24 +1,22 @@
 
 
-import { View, Text, SafeAreaView, Platform, Image, Dimensions, TouchableOpacity } from 'react-native'
-import React, { FC } from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { COLORS } from '../Constants/Colors'
+import React, { FC } from 'react'
+import { Image, Platform, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
+import { COLORS } from '../Constants/Colors'
 import { FONTS } from '../Constants/Font'
 
 import * as Icon from "react-native-feather"
-import Auth from '../Service/Auth'
-import Navigation from '../Service/Navigation'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { logoutUser } from '../Redux/users'
-
-
-const { width } = Dimensions.get('window')
+import Auth from '../Service/Auth'
+import { GlobalUserState, User } from '../types'
 
 const Profile = () => {
 
   const dispatch = useDispatch()
+  const user = useSelector<GlobalUserState>(state => state.User.user) as User;
 
   const logout = async () => {
     await Auth.logout()
@@ -45,7 +43,7 @@ const Profile = () => {
             <Text
               className='text-lg'
               style={{ fontFamily: FONTS.extraBold, opacity: 0.8 }}>
-              Gervais BOMMEU </Text>
+              {user.name} </Text>
             <TouchableOpacity
               className="mt-1"
               onPress={() => { }}>

@@ -89,9 +89,9 @@ const VehiculeForm = () => {
         <SafeAreaView
             style={{ backgroundColor: COLORS.white }}
             className="flex-1 ">
-            <StatusBar style="dark" />
+            <StatusBar style="dark" hidden />
             <KeyboardAwareScrollView
-                className="flex-1 px-7"
+                className="flex-1 px-7 pt-6"
                 behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
                 <TouchableOpacity
                 onPress={() => Navigation.back()}>

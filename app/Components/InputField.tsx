@@ -17,7 +17,7 @@ const InputField: FC<PropsType> = ({ label, placeholder, setData, data }) => {
         <View className='mt-2'>
             <Text
             style= {{ fontFamily: FONTS.Regular }}
-                className="text-left my-1 text-base text-black"
+                className="text-left my-1 text-sm text-black"
             >
                 {label}
             </Text>
