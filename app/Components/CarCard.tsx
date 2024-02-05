@@ -7,26 +7,34 @@ import { COLORS } from '../Constants/Colors'
 
 interface Props {
     onPress: () => void
-    // car: Car
+    car: Car
 }
 
-const CarCard: FC<Props> = ({ onPress }) => {
+const CarCard: FC<Props> = ({ onPress, car }) => {
     return (
         <TouchableOpacity
             onPress={onPress}
             className="rounded-lg bg-gray-50 p-3 mb-3">
             <View className="h-40 w-full rounded-lg overflow-hidden">
                 <Image
-                    source={require('../Assets/img/car3.jpg')}
+                    source={{ uri: car.image }}
                     className="h-full w-full"
                 />
             </View>
+            <View className="flex-row mt-2 space-x-1 justify-start items-center">
+                <Text
+                    className='text-sm'
+                    style={{ fontFamily: FONTS.SemiBold, opacity: 0.8 }}>
+                    {car.model.libelle}
+                </Text>
+                <Text
+                    className='text-sm'
+                    style={{ fontFamily: FONTS.Regular, opacity: 0.8 }}>
+                    * {car._id}
+                </Text>
+            </View>
             <Text
-                className='text-sm mt-2'
-                style={{ fontFamily: FONTS.SemiBold, opacity: 0.8 }}>
-                Mercedes Benz 2020</Text>
-            <Text
-                className='text-xs'
+                className='text-xs mt-1'
                 style={{ fontFamily: FONTS.SemiBold, color: COLORS.thirdth, opacity: 0.8 }}>
                 75 000 Fcfa ce mois</Text>
             <View

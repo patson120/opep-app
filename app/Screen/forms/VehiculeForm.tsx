@@ -111,7 +111,7 @@ const VehiculeForm: FC<any> = () => {
         <SafeAreaView
             style={{ backgroundColor: COLORS.white }}
             className="flex-1 ">
-            <StatusBar style="light" />
+            <StatusBar style="dark" />
             <KeyboardAwareScrollView
                 className="flex-1 px-7"
                 behavior={Platform.OS == 'ios' ? 'padding' : undefined}>

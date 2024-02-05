@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native'
+import { View, Text, TouchableOpacity, Image, GestureResponderEvent } from 'react-native'
 import React, { FC } from 'react'
 import { FONTS } from '../Constants/Font'
 import { COLORS } from '../Constants/Colors'
@@ -8,15 +8,14 @@ import * as Icon from 'react-native-feather'
 type Props = {
     title: string;
     subTitle: string;
-    onPress: () => void;
+    onPress: (event: GestureResponderEvent) => void;
 }
 
 const BigButton: FC<Props> = ({ title, subTitle, onPress }) => {
     return (
-        <TouchableOpacity className="w-full -mt-2 mb-2 rounded-xl p-3 shadow-xl shadow-gray-400 bg-white">
-            <View
-                className="flex-row justify-between items-center"
-                onPress={() => { Navigation.navigate("VehiculeForm") }}>
+        <TouchableOpacity className="w-full -mt-2 mb-2 rounded-xl p-3 shadow-xl shadow-gray-400 bg-white"
+            onPress={onPress}>
+            <View className="flex-row justify-between items-center">
                 <View className='w-1/5 h-14 rounded-lg bg-gray-100 justify-center items-center'>
                     <Image
                         className="h-auto w-10"
