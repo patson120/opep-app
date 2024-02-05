@@ -1,4 +1,5 @@
 import Storage from '../Utils/Storage';
+import { User } from '../types';
 
 async function getAccount() {
   return await Storage.get('account') as User | undefined;

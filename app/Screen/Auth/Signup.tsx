@@ -85,7 +85,7 @@ const Signup = () => {
                     >
                         <Image
                             source={require('../../Assets/img/logo1 1.png')}
-                            className="mb-5 w-full"
+                            className="mb-5 w-auto"
                         />
 
                     </View>

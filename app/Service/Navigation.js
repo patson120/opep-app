@@ -37,7 +37,6 @@ function back() {
   _navigator.dispatch(CommonActions.goBack())
 }
 
-
 export default {
   navigate,
   setTopLevelNavigator,

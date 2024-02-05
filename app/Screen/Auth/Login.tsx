@@ -27,6 +27,7 @@ import Auth from "../../Service/Auth"
 import { User } from "../../types"
 import { useDispatch } from "react-redux"
 import { setUser } from "../../Redux/users"
+import { StatusBar } from "expo-status-bar"
 
 
 const Login = () => {
@@ -67,7 +68,7 @@ const Login = () => {
 
     return (
         <SafeAreaView className="flex-1">
-            {/* <StatusBar style="auto" /> */}
+            <StatusBar hidden />
             <KeyboardAwareScrollView
                 className="flex-1"
                 behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
@@ -78,7 +79,7 @@ const Login = () => {
                         className="w-24 mb-4">
                         <Image
                             source={require('../../Assets/img/logo1 1.png')}
-                            className="mb-5 w-full"
+                            className="mb-5 w-auto"
                         />
                     </View>
                     <Text

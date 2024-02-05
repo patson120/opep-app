@@ -2,7 +2,9 @@
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack"
 import React from "react"
 import { COLORS } from "../Constants/Colors"
-import Home from "../Screen/Home"
+import VehiculeForm from "../Screen/forms/VehiculeForm"
+import MainContainer from "./MainContainer"
+import Login from "../Screen/Auth/Login"
 
 const Stack = createStackNavigator()
 
@@ -18,14 +20,13 @@ const AppStack = () => {
                     backgroundColor: COLORS.black,
                 },
                 ...TransitionPresets.SlideFromRightIOS,
+                
             }}
-            initialRouteName="Home"
+            initialRouteName="BottomTabs"
         >
-            <Stack.Screen name="Home" component={Home}
-                options={{
-                    headerShown: false,
-                }}
-            />
+            <Stack.Screen name="BottomTabs" component={MainContainer} options={{ headerShown: false }} />
+            <Stack.Screen name="VehiculeForm" component={VehiculeForm} options={{ headerShown: false }} />
+         
 
         </Stack.Navigator>
     )

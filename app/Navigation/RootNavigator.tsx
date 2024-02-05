@@ -28,7 +28,7 @@ const RootNavigator = () => {
             try {
                 await useFonts();
                 // await Auth.setAccount(null)
-                
+
                 setTimeout(() => {
                     setFontIsReady(true)
                     setLoginChk(false) // juste pour passer le test qui plus bas
@@ -45,7 +45,7 @@ const RootNavigator = () => {
     }, []);
 
     const getUser = async () => {
-        let data: User = await Auth.getAccount();
+        let data: User = await Auth.getAccount() as User;
         if (data != null) {
             dispatch(setUser(data))
             setLoginChk(false)

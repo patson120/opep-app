@@ -30,6 +30,7 @@ import { doc, setDoc, query, collection, getDocs } from "firebase/firestore"
 import { TABLE } from "../../Constants/Table"
 import { useSelector } from "react-redux"
 import { selectUser } from "../../Redux/users"
+import Navigation from "../../Service/Navigation"
 
 
 
@@ -46,15 +47,9 @@ const VehiculeForm: FC<any> = () => {
 
     const user: User = useSelector<GlobalUserState>(selectUser) as User
 
-    const [marques, setMarques] = useState<DropdownItemType[]>([
-        { label: 'marque 1', value: '1' },
-        { label: 'marque 2', value: '2' }
-    ])
+    const [marques, setMarques] = useState<DropdownItemType[]>([])
 
-    const [models, setModels] = useState<DropdownItemType[]>([
-        { label: 'modèle 1', value: '1' },
-        { label: 'modèle 2', value: '2' }
-    ])
+    const [models, setModels] = useState<DropdownItemType[]>([])
 
     const handleDocumentSelection = useCallback(async () => {
         try {
@@ -93,8 +88,6 @@ const VehiculeForm: FC<any> = () => {
         const marquesQuery = query(collection(database, TABLE.CAR_MARQUE));
         const querySnapshot = await getDocs(marquesQuery);
         querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data())
             setMarques(prev => prev.concat({ label: doc.data().libelle, value: doc.id }))
         })
     }
@@ -103,17 +96,15 @@ const VehiculeForm: FC<any> = () => {
         const modelsQuery = query(collection(database, TABLE.CAR_MODEL));
         const querySnapshot = await getDocs(modelsQuery);
         querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data())
             setModels(prev => prev.concat({ label: doc.data().libelle, value: doc.id }))
         })
     }
 
 
     useEffect(() => {
-        // getAllMarques()
-        // getAllModels()
-    })
+        getAllMarques()
+        getAllModels()
+    }, [])
 
 
     return (
@@ -124,10 +115,11 @@ const VehiculeForm: FC<any> = () => {
             <KeyboardAwareScrollView
                 className="flex-1 px-7"
                 behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
-                <View>
+                <TouchableOpacity
+                onPress={() => Navigation.back()}>
                     <Icon.ChevronLeft color={COLORS.black} strokeWidth={3} />
-                </View>
-                <View className="mt-10">
+                </TouchableOpacity>
+                <View className="mt-8">
                     <Text
                         style={{ fontFamily: FONTS.Bold }}
                         className='text-lg'
@@ -146,13 +138,13 @@ const VehiculeForm: FC<any> = () => {
                     onChangeValue={setSelectedMarque}
                     placeholder="Entrer la marque..."
                 />
-                 <DropdownComponent
+                <DropdownComponent
                     label="Modèle"
                     data={models}
                     onChangeValue={setSelectedModel}
                     placeholder="Entrer le modèle..."
                 />
-               
+
                 <InputField
                     label={'Immatriculation'}
                     placeholder="Ex: OU466GT"

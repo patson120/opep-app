@@ -17,6 +17,15 @@ export const userSlice: Slice<UserRootState> = createSlice({
     reducers: {
         setUser: (state: UserRootState, action: any) => {
             return { ...state, user: { ...action.payload }, login: action.payload._id ? true : false };
+        },
+        logoutUser: (state: UserRootState, action: any) => {
+            return { user: {
+                _id: '',
+                contact: '',
+                name: '',
+                password: ''
+            },
+            login: false,}
         }       
     }
 });
@@ -26,6 +35,7 @@ export const selectUser = (state: GlobalUserState) => state.User.user;
 // export const selectAllFriends = (state: RootStateType) => state.friends;
 
 export const { 
-    setUser
+    setUser,
+    logoutUser
 } = userSlice.actions;
 
