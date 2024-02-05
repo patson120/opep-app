@@ -5,6 +5,7 @@ import { COLORS } from "../Constants/Colors"
 import VehiculeForm from "../Screen/forms/VehiculeForm"
 import MainContainer from "./MainContainer"
 import Login from "../Screen/Auth/Login"
+import CarDetail from "../Screen/CarDetail"
 
 const Stack = createStackNavigator()
 
@@ -20,14 +21,11 @@ const AppStack = () => {
                     backgroundColor: COLORS.black,
                 },
                 ...TransitionPresets.SlideFromRightIOS,
-                
             }}
-            initialRouteName="BottomTabs"
-        >
+            initialRouteName="BottomTabs">
             <Stack.Screen name="BottomTabs" component={MainContainer} options={{ headerShown: false }} />
             <Stack.Screen name="VehiculeForm" component={VehiculeForm} options={{ headerShown: false }} />
-         
-
+            <Stack.Screen name="CarDetail" component={CarDetail} options={{ headerShown: false }} />
         </Stack.Navigator>
     )
 }

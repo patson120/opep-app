@@ -63,7 +63,7 @@ const Profile = () => {
           <Item label='Theme' ><Icon.Sun color={COLORS.gray} strokeWidth={2} width={30} height={30} /></Item>
           <TouchableOpacity
             onPress={logout}>
-            <Item label='Déconnexion' ><Icon.Unlock color={COLORS.gray} strokeWidth={2} width={30} height={30} /></Item>
+            <Item label='Déconnexion' ><Icon.LogOut color={COLORS.gray} strokeWidth={2} width={30} height={30} /></Item>
           </TouchableOpacity>
           <Item label='Politique de confidentialité' ><Icon.BookOpen color={COLORS.gray} strokeWidth={2} width={30} height={30} /></Item>
           <Item label='Termes et conditions' ><Icon.Edit color={COLORS.gray} strokeWidth={2} width={30} height={30} /></Item>

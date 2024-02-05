@@ -38,7 +38,7 @@ import useModels from "../../hooks/useModels"
 
 const { width } = Dimensions.get('window')
 
-const VehiculeForm: FC<any> = () => {
+const VehiculeForm = () => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [selectedModel, setSelectedModel] = useState<Model | null>()

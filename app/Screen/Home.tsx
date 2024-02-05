@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import { View, Text, SafeAreaView, Image, FlatList } from 'react-native'
+import { View, Text, SafeAreaView, Image, FlatList, ActivityIndicator } from 'react-native'
 import { COLORS } from "../Constants/Colors"
 import { StatusBar } from "expo-status-bar"
 
@@ -15,7 +15,7 @@ import useCars from "../hooks/useCars"
 
 const Home = () => {
     const { cars } = useCars()
-    
+
     return (
 
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -39,14 +39,21 @@ const Home = () => {
                     Mes véhicules</Text>
 
                 {/* Mes véhicules */}
-                <FlatList
-                    showsVerticalScrollIndicator={false}
-                    keyExtractor={({ _id }) => `${_id}`}
-                    data={cars}
-                    renderItem={({ item }) => <CarCard
-                        car={item}
-                        onPress={() => { }} />}
-                />
+                {
+                    cars.length == 0 ?
+                        <View className="flex-1 justify-center items-center">
+                            <ActivityIndicator size="large" color={COLORS.secondary} />
+                        </View> :
+
+                        <FlatList
+                            showsVerticalScrollIndicator={false}
+                            keyExtractor={({ _id }) => `${_id}`}
+                            data={cars}
+                            renderItem={({ item }) => <CarCard
+                                car={item}
+                                onPress={() => { Navigation.navigate("CarDetail", { car: item }) }} />}
+                        />
+                }
 
             </View>
         </SafeAreaView >
