@@ -31,6 +31,8 @@ import { TABLE } from "../../Constants/Table"
 import { useSelector } from "react-redux"
 import { selectUser } from "../../Redux/users"
 import Navigation from "../../Service/Navigation"
+import useMarques from "../../hooks/useMarque"
+import useModels from "../../hooks/useModels"
 
 
 
@@ -47,9 +49,9 @@ const VehiculeForm: FC<any> = () => {
 
     const user: User = useSelector<GlobalUserState>(selectUser) as User
 
-    const [marques, setMarques] = useState<DropdownItemType[]>([])
+    const { marques } = useMarques()
+    const { models } = useModels()
 
-    const [models, setModels] = useState<DropdownItemType[]>([])
 
     const handleDocumentSelection = useCallback(async () => {
         try {
@@ -82,30 +84,6 @@ const VehiculeForm: FC<any> = () => {
         await setDoc(doc(database, TABLE.CAR, `${car._id}`), { ...car })
         setIsLoading(false)
     }
-
-
-    const getAllMarques = async () => {
-        const marquesQuery = query(collection(database, TABLE.CAR_MARQUE));
-        const querySnapshot = await getDocs(marquesQuery);
-        querySnapshot.forEach((doc) => {
-            setMarques(prev => prev.concat({ label: doc.data().libelle, value: doc.id }))
-        })
-    }
-
-    const getAllModels = async () => {
-        const modelsQuery = query(collection(database, TABLE.CAR_MODEL));
-        const querySnapshot = await getDocs(modelsQuery);
-        querySnapshot.forEach((doc) => {
-            setModels(prev => prev.concat({ label: doc.data().libelle, value: doc.id }))
-        })
-    }
-
-
-    useEffect(() => {
-        getAllMarques()
-        getAllModels()
-    }, [])
-
 
     return (
         <SafeAreaView
@@ -179,7 +157,7 @@ const VehiculeForm: FC<any> = () => {
                     <TouchableOpacity
                         style={{ width: width / 3 }}
                         className='border border-gray-300 rounded-xl h-12 p-2 justify-center items-center'
-                        onPress={() => ''}>
+                        onPress={() => Navigation.back()}>
                         <Text
                             style={{ fontFamily: FONTS.Regular }}
                             className="text-left text-base text-black">
