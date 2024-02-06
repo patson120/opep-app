@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Car, GlobalUserState, User } from "../types";
 import { useSelector } from "react-redux";
 import { selectUser } from "../Redux/users";
+import carService from "../Service/Car";
 
 
 const useCars = () => {
@@ -21,13 +22,22 @@ const useCars = () => {
         querySnapshot.forEach((doc) => {
             setCars(prev => prev.concat({ ...doc.data() } as Car))
         })
+        await  saveCars()
+    }
+
+    const saveCars = async () => {
+        // Save cars in the local storage
+        if (cars.length > 0) {
+            await carService.setCars(cars)
+        }
     }
     useEffect(() => {
-        getCars() 
+        getCars()
     }, [])
 
+
+
     return { cars, refresh: getCars }
-    // return [cars, getCars]
 }
 
 export default useCars

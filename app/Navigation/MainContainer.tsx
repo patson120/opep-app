@@ -1,14 +1,14 @@
 
 
 
-import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import React from 'react'
 import * as Icon from "react-native-feather"
 import { COLORS } from '../Constants/Colors'
+import Depense from '../Screen/Depense'
 import Home from '../Screen/Home'
 import Profile from '../Screen/Profile'
-import VehiculeForm from '../Screen/forms/VehiculeForm'
-import DepenseForm from '../Screen/forms/DepenseForm'
+import Stats from '../Screen/Stats'
 
 
 
@@ -28,7 +28,7 @@ const MainContainer = () => {
           if (rn === "Home") {
             icon = <Icon.Home color={focused ? COLORS.secondary : COLORS.gray} strokeWidth={3} width={20} height={20} />
           }
-          else if (rn === "DepenseForm") {
+          else if (rn === "Depense") {
             icon = <Icon.TrendingDown color={focused ? COLORS.secondary : COLORS.gray} strokeWidth={3} width={20} height={20} />
           }
           else if (rn === 'Stats') {
@@ -43,8 +43,8 @@ const MainContainer = () => {
     >
 
       <Tab.Screen name='Home' component={Home} options={{ headerShown: false}} />
-      <Tab.Screen name='DepenseForm' component={DepenseForm} options={{ headerShown: false }} />
-      <Tab.Screen name='Stats' component={VehiculeForm} options={{ headerShown: false }} />
+      <Tab.Screen name='Depense' component={Depense} options={{ headerShown: false }} />
+      <Tab.Screen name="Stats" component={Stats} options={{ headerShown: false }} />
       <Tab.Screen name='Profile' component={Profile} options={{ headerShown: false }} />
 
 

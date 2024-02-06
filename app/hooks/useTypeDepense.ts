@@ -1,8 +1,8 @@
-import { query, collection, getDocs } from "firebase/firestore"
-import { database } from "../config/firebase";
-import { TABLE } from "../Constants/Table";
+import { collection, getDocs, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import {DropdownItemType, Model } from "../types";
+import { TABLE } from "../Constants/Table";
+import { database } from "../config/firebase";
+import { Model } from "../types";
 
 
 const useTypeDepense = () => {

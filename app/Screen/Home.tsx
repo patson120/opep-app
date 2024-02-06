@@ -11,13 +11,13 @@ import Navigation from "../Service/Navigation"
 import CarCard from "../Components/CarCard"
 import BigButton from "../Components/BigButton"
 import useCars from "../hooks/useCars"
+import * as Icon from 'react-native-feather'
 
 
 const Home = () => {
     const { cars } = useCars()
 
     return (
-
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
             <StatusBar style="dark" backgroundColor={COLORS.white} />
 
@@ -32,7 +32,9 @@ const Home = () => {
                     title="Ajouter un véhicule"
                     subTitle="Suiver l’activité de votre véhicule dès maintenant"
                     onPress={() => { Navigation.navigate("VehiculeForm") }}
-                />
+                >
+                    <Icon.Truck color={COLORS.gray} strokeWidth={2} width={30} height={30} />
+                </BigButton>
                 <Text
                     className='mt-2 text-lg'
                     style={{ fontFamily: FONTS.Bold, opacity: 0.8 }}>

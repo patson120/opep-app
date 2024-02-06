@@ -8,18 +8,17 @@ import * as Icon from 'react-native-feather'
 type Props = {
     title: string;
     subTitle: string;
+    children: React.JSX.Element,
     onPress: (event: GestureResponderEvent) => void;
 }
 
-const BigButton: FC<Props> = ({ title, subTitle, onPress }) => {
+const BigButton: FC<Props> = ({ title, subTitle, onPress, children }) => {
     return (
         <TouchableOpacity className="w-full -mt-2 mb-2 rounded-xl p-3 shadow-xl shadow-gray-400 bg-white"
             onPress={onPress}>
             <View className="flex-row justify-between items-center">
                 <View className='w-1/5 h-14 rounded-lg bg-gray-100 justify-center items-center'>
-                    <Image
-                        className="h-auto w-10"
-                        source={require("../Assets/icons/car.png")} />
+                    { children}
                 </View>
                 <View className='w-3/5'>
                     <Text
