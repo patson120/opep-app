@@ -15,6 +15,16 @@ export type Car = {
     userId: string
 }
 
+export type Depense = {
+    _id: string;
+    date: string;
+    montant: string;
+    quantite: number;
+    type_depense: string;
+    description: string;
+    vehiculeId: string;
+}
+
 export type Model = {
     _id: string;
     libelle: string;

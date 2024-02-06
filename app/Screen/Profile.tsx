@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logoutUser } from '../Redux/users'
 import Auth from '../Service/Auth'
 import { GlobalUserState, User } from '../types'
+import Navigation from '../Service/Navigation'
 
 const Profile = () => {
 
@@ -26,7 +27,7 @@ const Profile = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <StatusBar hidden />
       <KeyboardAwareScrollView
-        className="flex-1 px-7 pt-8"
+        className="flex-1 px-7 pt-12"
         behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
 
         <View className="flex-row space-x-2">
@@ -46,7 +47,7 @@ const Profile = () => {
               {user.name} </Text>
             <TouchableOpacity
               className="mt-1"
-              onPress={() => { }}>
+              onPress={() => Navigation.navigate("DepenseForm")}>
               <Text
                 className='text-xs'
                 style={{ fontFamily: FONTS.Regular, opacity: 0.8 }}>
@@ -56,15 +57,15 @@ const Profile = () => {
         </View>
 
         <View className="mt-6">
-          <Item label='Paramètres' ><Icon.Settings color={COLORS.gray} strokeWidth={2} width={30} height={30} /></Item>
-          <Item label='A propos de nous' ><Icon.HelpCircle color={COLORS.gray} strokeWidth={2} width={30} height={30} /></Item>
-          <Item label='Theme' ><Icon.Sun color={COLORS.gray} strokeWidth={2} width={30} height={30} /></Item>
+          <Item label='Paramètres' ><Icon.Settings color={COLORS.gray} strokeWidth={2} width={20} height={20} /></Item>
+          <Item label='A propos de nous' ><Icon.HelpCircle color={COLORS.gray} strokeWidth={2} width={20} height={20} /></Item>
+          <Item label='Theme' ><Icon.Sun color={COLORS.gray} strokeWidth={2} width={20} height={20} /></Item>
           <TouchableOpacity
             onPress={logout}>
-            <Item label='Déconnexion' ><Icon.LogOut color={COLORS.gray} strokeWidth={2} width={30} height={30} /></Item>
+            <Item label='Déconnexion' ><Icon.LogOut color={COLORS.gray} strokeWidth={2} width={20} height={20} /></Item>
           </TouchableOpacity>
-          <Item label='Politique de confidentialité' ><Icon.BookOpen color={COLORS.gray} strokeWidth={2} width={30} height={30} /></Item>
-          <Item label='Termes et conditions' ><Icon.Edit color={COLORS.gray} strokeWidth={2} width={30} height={30} /></Item>
+          <Item label='Politique de confidentialité' ><Icon.BookOpen color={COLORS.gray} strokeWidth={2} width={20} height={20} /></Item>
+          <Item label='Termes et conditions' ><Icon.Edit color={COLORS.gray} strokeWidth={2} width={20} height={20} /></Item>
         </View>
 
 
@@ -92,7 +93,7 @@ const Item: FC<Props> = ({ children, label }) => {
       </View>
       <View
         style={{ borderWidth: 0.8, borderColor: 'gray', opacity: 0.1 }}
-        className="w-full border-gray-100 my-5"></View>
+        className="w-full border-gray-100 my-4"></View>
     </View>
   )
 }

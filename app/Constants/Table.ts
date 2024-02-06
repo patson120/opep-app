@@ -5,4 +5,6 @@ export const TABLE = {
     CAR: "VEHICLE",
     CAR_MODEL: "MODEL",
     CAR_MARQUE: "MARQUE",
+    TYPE_DEPENSE: "TYPE_DEPENSE",
+    DEPENSE: "DEPENSE",
 }

@@ -28,7 +28,7 @@ const MainContainer = () => {
           if (rn === "Home") {
             icon = <Icon.Home color={focused ? COLORS.secondary : COLORS.gray} strokeWidth={3} width={20} height={20} />
           }
-          else if (rn === "Depense") {
+          else if (rn === "DepenseForm") {
             icon = <Icon.TrendingDown color={focused ? COLORS.secondary : COLORS.gray} strokeWidth={3} width={20} height={20} />
           }
           else if (rn === 'Stats') {
@@ -43,7 +43,7 @@ const MainContainer = () => {
     >
 
       <Tab.Screen name='Home' component={Home} options={{ headerShown: false}} />
-      <Tab.Screen name='Depense' component={DepenseForm} options={{ headerShown: false }} />
+      <Tab.Screen name='DepenseForm' component={DepenseForm} options={{ headerShown: false }} />
       <Tab.Screen name='Stats' component={VehiculeForm} options={{ headerShown: false }} />
       <Tab.Screen name='Profile' component={Profile} options={{ headerShown: false }} />
 

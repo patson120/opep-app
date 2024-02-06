@@ -21,18 +21,25 @@ import InputField from "../../Components/InputField"
 import PrimaryButton from "../../Components/PrimaryButton"
 import { FONTS } from "../../Constants/Font"
 
-import { DropdownItemType, GlobalUserState, Model, User } from "../../types"
+import { Depense, DropdownItemType, Model } from "../../types"
 
-import { useSelector } from "react-redux"
-import { selectUser } from "../../Redux/users"
 import Navigation from "../../Service/Navigation"
 import useCars from "../../hooks/useCars"
 
 import DateTimePicker from '@react-native-community/datetimepicker'
 
+import { doc, setDoc } from "firebase/firestore"
+import moment from "moment"
+import uuid from 'react-native-uuid'
+import { TABLE } from "../../Constants/Table"
+import { database } from "../../config/firebase"
+import useTypeDepense from "../../hooks/useTypeDepense"
+import SimpleToast from 'react-native-simple-toast'
+
 
 
 const { width } = Dimensions.get('window')
+const pattern = 'YYYY/MM/DD HH:mm:ss'
 
 const DepenseForm = () => {
 
@@ -41,49 +48,46 @@ const DepenseForm = () => {
     const [montant, setMontant] = useState('')
     const [quantite, setQuantite] = useState('')
 
-
-    const user: User = useSelector<GlobalUserState>(selectUser) as User
     const { cars } = useCars()
-
     const vehicles: DropdownItemType[] = cars.map(car => ({ label: car.model.libelle, value: car._id }))
 
-
-    const handleSubmit = async () => {
-        setIsLoading(true)
-        const car = {
-            // _id: immatriculation.trim(),
-            // model: selectedModel!,
-            // marque: selectedMarque!,
-            // image: uploadResp.downloadUrl,
-            userId: user._id!
-        };
-        // Add a new document in collection USER
-        // await setDoc(doc(database, TABLE.CAR, `${car._id}`), { ...car })
-        setIsLoading(false)
-    }
-
     const [selectedType, setSelectedType] = useState(0)
-    const types = ["Réparation", "Carburant", "Administration"]
-
+    const { types } = useTypeDepense()
 
     const [date, setDate] = useState(new Date())
     const [mode, setMode] = useState<"date" | "countdown" | "time" | 'datetime'>('date')
     const [show, setShow] = useState(false)
-    const [selectedDate, setSelectedDate] = useState("Entrer la date...")
+    const [selectedDate, setSelectedDate] = useState(moment().format(pattern))
 
-
+    const handleSubmit = async () => {
+        setIsLoading(true)
+        const depense: Depense = {
+            _id: uuid.v4().toString(),
+            date: selectedDate,
+            description: '',
+            montant: montant,
+            quantite: Number(quantite),
+            type_depense: types[selectedType]._id,
+            vehiculeId: selectedCar?._id!
+        };
+        // Add a new document in collection DEPENSE
+        await setDoc(doc(database, TABLE.DEPENSE, `${depense._id}`), { ...depense })
+        setIsLoading(false)
+        SimpleToast.show("Dépense ajoutée avec succès", 3)
+        Navigation.back()
+    }
     const onChange = (event: any, seletedDate: any) => {
         const currentDate = seletedDate || date
         setShow(Platform.OS === 'ios')
         setDate(currentDate)
+        // let tempDate = new Date(currentDate)
+        // let fTime = "Hours: " + tempDate.getHours() + " | minutes: " + tempDate.getMinutes()
+        setSelectedDate(moment(currentDate).format(pattern))
+    }
 
-        let tempDate = new Date(currentDate)
-        const jour = Number(tempDate.getDate()) > 9 ? tempDate.getDate(): `0${tempDate.getDate()}`
-        const mois = Number(tempDate.getMonth() + 1) > 9 ? (tempDate.getMonth() + 1): `0${tempDate.getMonth() + 1}`
-        let fDate =   jour + '/' + mois + '/' + tempDate.getFullYear()
-        let fTime = "Hours: " + tempDate.getHours() + " | minutes: " + tempDate.getMinutes()
-
-        setSelectedDate(fDate)
+    const verifiedtype = (type: string): boolean => {
+        if (types.length === 0) return false
+        return types[selectedType]!.libelle.toLowerCase().includes(type.toLowerCase())
     }
 
     return (
@@ -113,29 +117,35 @@ const DepenseForm = () => {
                 </View>
 
                 {/* Type Depenses */}
-                <View className="mt-3 mb-2">
-                    <Text
-                        style={{ fontFamily: FONTS.Regular }}
-                        className="mb-3 text-sm">Type dépense</Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        {
-                            types.map((type, index) => (
-                                <Pressable
-                                    onPress={() => setSelectedType(index)}
-                                    style={{
-                                        borderColor: selectedType == index ? COLORS.black : COLORS.bgGray,
-                                        borderWidth: 1.4
-                                    }}
-                                    key={`${index}`} className="px-4 py-2 mr-3 rounded-md">
-                                    <Text
-                                        style={{ fontFamily: selectedType == index ? FONTS.SemiBold : FONTS.Regular, opacity: selectedType == index ? 1 : 0.5 }}
-                                        className="text-sm">{type}</Text>
-                                </Pressable>
-                            ))
-                        }
-                    </ScrollView>
-                </View>
-
+                {
+                    types.length > 0 &&
+                    <View className="mt-3 mb-2">
+                        <Text
+                            style={{ fontFamily: FONTS.Regular }}
+                            className="mb-3 text-sm">Type dépense</Text>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                            {
+                                types.map((type, index) => (
+                                    <Pressable
+                                        onPress={() => setSelectedType(index)}
+                                        style={{
+                                            borderColor: selectedType == index ? COLORS.secondary : COLORS.bgGray,
+                                            borderWidth: 1.4
+                                        }}
+                                        key={`${index}`} className="px-4 py-2 mr-3 rounded-md">
+                                        <Text
+                                            style={{
+                                                fontFamily: selectedType == index ? FONTS.SemiBold : FONTS.Regular,
+                                                color: selectedType == index ? COLORS.secondary : COLORS.black,
+                                                opacity: selectedType == index ? 1 : 0.5
+                                            }}
+                                            className="text-sm">{type.libelle}</Text>
+                                    </Pressable>
+                                ))
+                            }
+                        </ScrollView>
+                    </View>
+                }
                 <InputField
                     label={'Montant'}
                     placeholder="Ex: 3500"
@@ -143,13 +153,15 @@ const DepenseForm = () => {
                     setData={setMontant}
                 />
 
-                <InputField
-                    label={'Quantité (en L)'}
-                    placeholder="Ex: 03"
-                    data={quantite}
-                    setData={setQuantite}
-                />
-
+                {
+                    verifiedtype("carburant") &&
+                    <InputField
+                        label={'Quantité (en L)'}
+                        placeholder="Ex: 03"
+                        data={quantite}
+                        setData={setQuantite}
+                    />
+                }
                 <View className="mt-3">
                     <DropdownComponent
                         label="Véhicule concerné"
@@ -159,17 +171,19 @@ const DepenseForm = () => {
                     />
                 </View>
 
-
+                <Text
+                    style={{ fontFamily: FONTS.Regular }}
+                    className='text-sm mt-2'>
+                    Entrez la date</Text>
                 <TouchableOpacity
                     onPress={() => { setShow(true) }}
-                    className="border border-gray-100 h-12 rounded-md mt-3 pl-3 justify-center"
-                >
+                    className="border border-gray-100 h-12 rounded-lg mt-1 pl-3 justify-center">
                     <Text
                         className="text-sm"
                         style={{ fontFamily: FONTS.Regular, opacity: 0.5 }}>{selectedDate}</Text>
                 </TouchableOpacity>
 
-                <View className="mt-10 mb-8 flex-row justify-between" >
+                <View className="mt-10 mb-8 flex-row justify-between">
                     <TouchableOpacity
                         style={{ width: width / 3 }}
                         className='border border-gray-300 rounded-xl h-12 p-2 justify-center items-center'

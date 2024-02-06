@@ -1,7 +1,7 @@
 
 
 import { StatusBar } from "expo-status-bar"
-import React, { FC, useCallback, useEffect, useState } from "react"
+import React, { useCallback, useState } from "react"
 import {
     Dimensions,
     Image,
@@ -9,26 +9,25 @@ import {
     Text,
     TouchableOpacity,
     View
-}
-    from 'react-native'
+} from 'react-native'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { COLORS } from "../../Constants/Colors"
 
+import * as DocumentPicker from 'expo-document-picker'
 import * as Icon from "react-native-feather"
-import { FONTS } from "../../Constants/Font"
+import DropdownComponent from "../../Components/DropdownComponent"
 import InputField from "../../Components/InputField"
 import PrimaryButton from "../../Components/PrimaryButton"
-import DropdownComponent from "../../Components/DropdownComponent"
-import * as DocumentPicker from 'expo-document-picker'
+import { FONTS } from "../../Constants/Font"
 
 import SimpleToast from 'react-native-simple-toast'
-import { Car, DropdownItemType, FileDataType, GlobalUserState, Marque, Model, User, UserRootState } from "../../types"
-import { uploadToFirebase, database } from "../../config/firebase"
+import { database, uploadToFirebase } from "../../config/firebase"
+import { Car, FileDataType, GlobalUserState, Marque, Model, User } from "../../types"
 
-import { doc, setDoc, query, collection, getDocs } from "firebase/firestore"
-import { TABLE } from "../../Constants/Table"
+import { doc, setDoc } from "firebase/firestore"
 import { useSelector } from "react-redux"
+import { TABLE } from "../../Constants/Table"
 import { selectUser } from "../../Redux/users"
 import Navigation from "../../Service/Navigation"
 import useMarques from "../../hooks/useMarque"
@@ -51,7 +50,6 @@ const VehiculeForm = () => {
 
     const { marques } = useMarques()
     const { models } = useModels()
-
 
     const handleDocumentSelection = useCallback(async () => {
         try {
