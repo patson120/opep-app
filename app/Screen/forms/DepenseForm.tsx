@@ -1,7 +1,7 @@
 
 
 import { StatusBar } from "expo-status-bar"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
     Dimensions,
     Platform,
@@ -35,6 +35,7 @@ import { TABLE } from "../../Constants/Table"
 import { database } from "../../config/firebase"
 import useTypeDepense from "../../hooks/useTypeDepense"
 import SimpleToast from 'react-native-simple-toast'
+import useSousTypeDepense from "../../hooks/useSousTypeDepense"
 
 
 
@@ -47,28 +48,40 @@ const DepenseForm = () => {
     const [selectedCar, setSelectedCar] = useState<Model | null>()
     const [montant, setMontant] = useState('')
     const [quantite, setQuantite] = useState('')
+    const [description, setDescription] = useState('')
+    const [sousTypes, setSousTypes] = useState<Model[]>([])
+
 
     const { cars } = useCars()
     const vehicles: DropdownItemType[] = cars.map(car => ({ label: car.model.libelle, value: car._id }))
 
     const [selectedType, setSelectedType] = useState(0)
+    const [selectedSousType, setSelectedSousType] = useState(0)
     const { types } = useTypeDepense()
+    const { getSousTypeDepenses } = useSousTypeDepense()
 
     const [date, setDate] = useState(new Date())
     const [mode, setMode] = useState<"date" | "countdown" | "time" | 'datetime'>('date')
     const [show, setShow] = useState(false)
-    const [selectedDate, setSelectedDate] = useState(moment().format(pattern))
+    const [selectedDate, setSelectedDate] = useState(moment(date).format(pattern))
+
 
     const handleSubmit = async () => {
         setIsLoading(true)
         const depense: Depense = {
             _id: uuid.v4().toString(),
-            date: selectedDate,
-            description: '',
-            montant: montant,
+            date: moment(date).format(),
+            // description: description ? description : `${types[selectedType].libelle}`,
+            description: description ?
+                description : (Number(montant) ?
+                    `Consommation de ${Number(montant)}L (${sousTypes[selectedSousType].libelle})` :
+                    `${types[selectedType].libelle}`),
+            montant: Number(montant),
             quantite: Number(quantite),
             type_depense: types[selectedType]._id,
-            vehiculeId: selectedCar?._id!
+            vehiculeId: selectedCar?._id!,
+            createdAt: moment().format(),
+            updatedAt: moment().format()
         };
         // Add a new document in collection DEPENSE
         await setDoc(doc(database, TABLE.DEPENSE, `${depense._id}`), { ...depense })
@@ -89,6 +102,15 @@ const DepenseForm = () => {
         if (types.length === 0) return false
         return types[selectedType]!.libelle.toLowerCase().includes(type.toLowerCase())
     }
+
+    useEffect(() => {
+        if (types.length > 0) {
+            getSousTypeDepenses(types[selectedType]._id).then((res) => {
+                setSelectedSousType(0)
+                setSousTypes(res)
+            })
+        }
+    }, [types, selectedType])
 
     return (
         <SafeAreaView
@@ -146,6 +168,47 @@ const DepenseForm = () => {
                         </ScrollView>
                     </View>
                 }
+
+                {/* Sous Type Depenses */}
+                {
+                    sousTypes.length > 0 &&
+                    <View className="mt-3 mb-2">
+                        <Text
+                            style={{ fontFamily: FONTS.Regular }}
+                            className="mb-3 text-sm">Sous Type dépense</Text>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                            {
+                                sousTypes.map((sousType, index) => (
+                                    <Pressable
+                                        onPress={() => setSelectedSousType(index)}
+                                        style={{
+                                            borderColor: selectedSousType == index ? COLORS.secondary : COLORS.bgGray,
+                                            borderWidth: 1.4
+                                        }}
+                                        key={`${index}`} className="px-4 py-2 mr-3 rounded-md">
+                                        <Text
+                                            style={{
+                                                fontFamily: selectedSousType == index ? FONTS.SemiBold : FONTS.Regular,
+                                                color: selectedSousType == index ? COLORS.secondary : COLORS.black,
+                                                opacity: selectedSousType == index ? 1 : 0.5
+                                            }}
+                                            className="text-sm">{sousType.libelle}</Text>
+                                    </Pressable>
+                                ))
+                            }
+                        </ScrollView>
+                    </View>
+                }
+
+                <View className="mt-2">
+                    <DropdownComponent
+                        label="Véhicule concerné"
+                        data={vehicles}
+                        onChangeValue={setSelectedCar}
+                        placeholder="Choisir le véhicule..."
+                    />
+                </View>
+
                 <InputField
                     label={'Montant'}
                     placeholder="Ex: 3500"
@@ -154,7 +217,7 @@ const DepenseForm = () => {
                 />
 
                 {
-                    verifiedtype("carburant") &&
+                    verifiedtype("consommation") &&
                     <InputField
                         label={'Quantité (en L)'}
                         placeholder="Ex: 03"
@@ -162,14 +225,6 @@ const DepenseForm = () => {
                         setData={setQuantite}
                     />
                 }
-                <View className="mt-3">
-                    <DropdownComponent
-                        label="Véhicule concerné"
-                        data={vehicles}
-                        onChangeValue={setSelectedCar}
-                        placeholder="Choisir le véhicule..."
-                    />
-                </View>
 
                 <Text
                     style={{ fontFamily: FONTS.Regular }}
@@ -182,6 +237,13 @@ const DepenseForm = () => {
                         className="text-sm"
                         style={{ fontFamily: FONTS.Regular, opacity: 0.5 }}>{selectedDate}</Text>
                 </TouchableOpacity>
+
+                <InputField
+                    label={'Description'}
+                    placeholder="Entrez une description de la dépense..."
+                    data={description}
+                    setData={setDescription}
+                />
 
                 <View className="mt-10 mb-8 flex-row justify-between">
                     <TouchableOpacity

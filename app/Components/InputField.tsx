@@ -29,6 +29,7 @@ const InputField: FC<PropsType> = ({ label, placeholder, setData, data }) => {
                 onChangeText={setData}
                 value={data}
                 placeholderTextColor={'#9D9D9D'}
+                multiline={true}
             />
         </View>
     )

@@ -5,6 +5,8 @@ export type User = {
     contact: string;
     name?: string;
     password: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export type Car = {
@@ -12,17 +14,21 @@ export type Car = {
     model: Model;
     marque: Marque;
     image: string;
-    userId: string
+    userId: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export type Depense = {
     _id: string;
     date: string;
-    montant: string;
+    montant: number;
     quantite: number;
     type_depense: string;
     description: string;
     vehiculeId: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export type Model = {

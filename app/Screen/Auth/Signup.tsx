@@ -27,6 +27,7 @@ import { TABLE } from "../../Constants/Table"
 import bcrypt from 'react-native-bcrypt'
 import SimpleToast from 'react-native-simple-toast'
 import { User } from "../../types"
+import moment from "moment"
 
 
 const Signup = () => {
@@ -45,6 +46,8 @@ const Signup = () => {
             name: name.trim(),
             contact: contact.trim(),
             password: password.trim(),
+            createdAt: moment().format(),
+            updatedAt: moment().format()
         };
 
         // Hash du mot de password

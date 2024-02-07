@@ -10,25 +10,44 @@ import * as Icon from 'react-native-feather'
 import { ScrollView } from 'react-native-gesture-handler'
 import DepenseGroup from '../Components/DepenseGroup'
 import DepenseItem from '../Components/DepenseItem'
-import { Car } from '../types'
+import { Car, Depense as D } from '../types'
 import carService from '../Service/Car'
+import useDepense from '../hooks/useDepense'
+import moment from 'moment'
+import { collection, getAggregateFromServer, sum } from 'firebase/firestore'
+import { database } from '../config/firebase'
+import { TABLE } from '../Constants/Table'
 
 const Depense = () => {
-    const [selectedPeriod, setSelectedPeriod] = useState(0)
-    const periodes = ["Cette année", "Ce mois", "Cette semaine", "Aujourd'hui", "Dernier semestre"]
 
-    const [cars, setCars] = useState<Car[]>([])
-    console.log({ cars });
+    const { getDepenses } = useDepense()
+    const [selectedPeriod, setSelectedPeriod] = useState(0)
+    const [depenses, setDepenses] = useState<D[]>([])
+    const periodes = ["Cette année", "Ce mois", "Cette semaine", "Aujourd'hui", "Dernier semestre"]
 
 
     useEffect(() => {
         const getAllCars = async () => {
-            const result = await carService.getCars() as Car[]
-            setCars(prev => prev.concat(result))
+            const cars = await carService.getCars() as Car[]
+            const result = await getDepenses(cars.map(car => car._id))
+            setDepenses(result)
         }
         getAllCars()
     }, [])
 
+
+    useEffect(() => {
+        const getMontant = async () => {
+            const coll = collection(database, TABLE.DEPENSE);
+            const snapshot = await getAggregateFromServer(coll, {
+                montant: sum('montant')
+            });
+
+            console.log('MontantTotal: ', snapshot.data().montant);
+        }
+
+        getMontant()
+    }, [])
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
             <StatusBar style="dark" backgroundColor={COLORS.white} />
@@ -128,26 +147,16 @@ const Depense = () => {
 
                     {/* Liste des dépenses */}
                     <View className="mt-4 mb-10">
-                        <DepenseItem
-                            label='Achat de Carburant'
-                            value1='20L/11 Octobre 2021'
-                            value2='15.000 Fcfa'
-                        />
-                        <DepenseItem
-                            label='Achat de Carburant'
-                            value1='20L/11 Octobre 2021'
-                            value2='15.000 Fcfa'
-                        />
-                        <DepenseItem
-                            label='Achat de Carburant'
-                            value1='20L/11 Octobre 2021'
-                            value2='15.000 Fcfa'
-                        />
-                        <DepenseItem
-                            label='Changement de rétroviseurs'
-                            value1='03 Décembre 2021'
-                            value2='15.000 Fcfa'
-                        />
+                        {
+                            depenses.map((dep) => (
+                                <DepenseItem
+                                    label={dep.description}
+                                    value1={dep.quantite ? `${dep.quantite}L/ ${moment(dep.date).format('LLL')}` : `${moment(dep.date).format('LLL')}`}
+                                    value2={`${dep.montant} Fcfa`}
+                                    key={`${dep._id}`}
+                                />)
+                            )
+                        }
                     </View>
 
                 </ScrollView>

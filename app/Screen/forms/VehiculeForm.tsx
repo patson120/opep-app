@@ -32,6 +32,7 @@ import { selectUser } from "../../Redux/users"
 import Navigation from "../../Service/Navigation"
 import useMarques from "../../hooks/useMarque"
 import useModels from "../../hooks/useModels"
+import moment from "moment"
 
 
 
@@ -76,7 +77,9 @@ const VehiculeForm = () => {
             model: selectedModel!,
             marque: selectedMarque!,
             image: uploadResp.downloadUrl,
-            userId: user._id!
+            userId: user._id!,
+            createdAt: moment().format(''),
+            updatedAt: moment().format('')
         };
         // Add a new document in collection USER
         await setDoc(doc(database, TABLE.CAR, `${car._id}`), { ...car })
