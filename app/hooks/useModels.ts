@@ -8,7 +8,7 @@ import {DropdownItemType } from "../types";
 const useModels = () => {
     const [models, setModels] = useState<DropdownItemType[]>([])
     const getModels = async () => {
-        const modelsQuery = query(collection(database, TABLE.CAR_MARQUE))
+        const modelsQuery = query(collection(database, TABLE.CAR_MODEL))
         const querySnapshot = await getDocs(modelsQuery)
         setModels([])
         querySnapshot.forEach((doc) => {

@@ -13,10 +13,15 @@ export type Car = {
     _id: string;
     model: Model;
     marque: Marque;
-    image: string;
+    images: ImageType[];
     userId: string;
     createdAt: string;
     updatedAt: string;
+}
+
+export type ImageType = {
+    url: string;
+    createdAt: string;
 }
 
 export type Depense = {
@@ -66,5 +71,10 @@ export type FileDataType = {
 
 export type DropdownItemType = {
     label: string;
+    value: string;
+}
+
+export type Period = {
+    libelle: string;
     value: string;
 }

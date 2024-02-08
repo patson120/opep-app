@@ -19,3 +19,5 @@ export default function App() {
     )
 }
 
+// build apk
+// eas build -p android --profile preview

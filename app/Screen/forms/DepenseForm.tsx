@@ -71,10 +71,9 @@ const DepenseForm = () => {
         const depense: Depense = {
             _id: uuid.v4().toString(),
             date: moment(date).format(),
-            // description: description ? description : `${types[selectedType].libelle}`,
             description: description ?
                 description : (Number(montant) ?
-                    `Consommation de ${Number(montant)}L (${sousTypes[selectedSousType].libelle})` :
+                    `Consommation de ${Number(quantite) > 0 ? Number(quantite) + 'L' : '' } (${sousTypes[selectedSousType].libelle})` :
                     `${types[selectedType].libelle}`),
             montant: Number(montant),
             quantite: Number(quantite),

@@ -22,7 +22,7 @@ const useCars = () => {
         querySnapshot.forEach((doc) => {
             setCars(prev => prev.concat({ ...doc.data() } as Car))
         })
-        await  saveCars()
+        await saveCars()
     }
 
     const saveCars = async () => {
@@ -31,13 +31,21 @@ const useCars = () => {
             await carService.setCars(cars)
         }
     }
+
+    const getImmatriculations = async () => {
+        // Get cars in the local storage
+        const result = await carService.getCars()
+        return result?.map(car => car._id)
+
+    }
+   
     useEffect(() => {
         getCars()
     }, [])
 
 
 
-    return { cars, refresh: getCars }
+    return { cars, refresh: getCars, getImmatriculations }
 }
 
 export default useCars

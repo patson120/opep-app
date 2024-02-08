@@ -17,7 +17,7 @@ const CarCard: FC<Props> = ({ onPress, car }) => {
             className="rounded-lg bg-gray-50 p-3 mb-3">
             <View className="h-40 w-full rounded-lg overflow-hidden">
                 <Image
-                    source={{ uri: car.image }}
+                    source={{ uri: car.images[0].url }}
                     className="h-full w-full"
                 />
             </View>

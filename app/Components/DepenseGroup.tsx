@@ -29,7 +29,7 @@ const DepenseGroup: FC<Props> = ({ title, subTitle, onPress, children }) => {
                     <Text
                         style={{ fontFamily: FONTS.Bold, color: COLORS.thirdth }}
                         className="text-left text-sm">
-                        {subTitle}
+                        {subTitle} Fcfa
                     </Text>
                 </View>
                 <View className="-mr-1">

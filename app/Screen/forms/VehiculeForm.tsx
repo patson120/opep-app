@@ -76,7 +76,7 @@ const VehiculeForm = () => {
             _id: immatriculation.trim(),
             model: selectedModel!,
             marque: selectedMarque!,
-            image: uploadResp.downloadUrl,
+            images: [  {url: uploadResp.downloadUrl, createdAt: moment().format()}],
             userId: user._id!,
             createdAt: moment().format(''),
             updatedAt: moment().format('')
@@ -84,6 +84,7 @@ const VehiculeForm = () => {
         // Add a new document in collection USER
         await setDoc(doc(database, TABLE.CAR, `${car._id}`), { ...car })
         setIsLoading(false)
+        Navigation.back()
     }
 
     return (

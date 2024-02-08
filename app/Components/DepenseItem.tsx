@@ -15,7 +15,7 @@ const DepenseItem: FC<DepenseProps> = ({ label, value1, value2 }) => {
     return (
         <View className="">
             <Text
-                style={{ fontFamily: FONTS.SemiBold }}
+                style={{ fontFamily: FONTS.Regular }}
                 className="text-sm my-2">{label}</Text>
 
             <View className="flex-row justify-between">

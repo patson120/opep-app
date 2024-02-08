@@ -42,7 +42,7 @@ const CarDetail = () => {
                     {/* Image */}
                     <View className="h-40 rounded-lg overflow-hidden m-4 mb-3">
                         <Image
-                            source={{ uri: car.image }}
+                            source={{ uri: car.images[0].url }}
                             className="h-full w-full"
                         />
                     </View>

@@ -1,53 +1,93 @@
 
-import { View, Text, SafeAreaView, Image, Pressable, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { COLORS } from '../Constants/Colors'
 import { StatusBar } from 'expo-status-bar'
-import BigButton from '../Components/BigButton'
-import Navigation from '../Service/Navigation'
-import { FONTS } from '../Constants/Font'
+import moment from 'moment'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { Image, Pressable, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import * as Icon from 'react-native-feather'
 import { ScrollView } from 'react-native-gesture-handler'
+import BigButton from '../Components/BigButton'
 import DepenseGroup from '../Components/DepenseGroup'
 import DepenseItem from '../Components/DepenseItem'
-import { Car, Depense as D } from '../types'
-import carService from '../Service/Car'
+import { COLORS } from '../Constants/Colors'
+import { FONTS } from '../Constants/Font'
+import Navigation from '../Service/Navigation'
+import useCars from '../hooks/useCars'
 import useDepense from '../hooks/useDepense'
-import moment from 'moment'
-import { collection, getAggregateFromServer, sum } from 'firebase/firestore'
-import { database } from '../config/firebase'
-import { TABLE } from '../Constants/Table'
+import useTypeDepense from '../hooks/useTypeDepense'
+import { Depense as D, Period } from '../types'
+
+const day = moment().day() - 1
+const toDay = new Date(moment().year(), moment().month(), moment().date(), 0, 0, 0)
+const s = moment().add(-6, 'months')
+const semester = new Date(s.year(), s.month(), s.date(), 0, 0, 0)
 
 const Depense = () => {
-
-    const { getDepenses } = useDepense()
+    const { getDepensesByPeriod } = useDepense()
     const [selectedPeriod, setSelectedPeriod] = useState(0)
     const [depenses, setDepenses] = useState<D[]>([])
-    const periodes = ["Cette année", "Ce mois", "Cette semaine", "Aujourd'hui", "Dernier semestre"]
+    const periodes: Period[] = [
+        {
+            libelle: "Aujourd'hui",
+            value: `${moment(toDay).format()}`
+        },
+        {
+            libelle: "Cette semaine",
+            value: moment().add(-day, 'days').format()
+        },
+        {
+            libelle: "Ce mois",
+            value: moment(new Date(moment().year(), moment().month(), 1, 0, 0, 0)).format()
+        },
+        {
+            libelle: "Dernier semestre",
+            value: `${moment(semester).format()}`
+        },
+        {
+            libelle: "Cette année",
+            value: `${moment().year()}-01-01T00:00:00+00:00`
+        },
+        {
+            libelle: "Année dernière",
+            value: `${moment().year()-1}-01-01T00:00:00+00:00`
+        }
+    ]
 
+    const [sumReparations, setSumReparations] = useState(0)
+    const [sumConsommations, setSumConsommations] = useState(0)
+    const [sumAdministrations, setSumAdministrations] = useState(0)
+    const [sumAutres, setSumAutres] = useState(0)
+    const [sumEntretien, setSumEntretien] = useState(0)
+    const [totalAmount, setTotalAmount] = useState(0)
+
+    const { types } = useTypeDepense()
+    const { getImmatriculations } = useCars()
+
+    const sumMontant = (libelle: string) => {
+        const type = types.find(type => type.libelle.toLowerCase().includes(libelle.toLowerCase()))?._id
+        const deps = depenses.filter(dep => dep.type_depense === type)
+        const somme = deps.reduce((acc, dep) => acc + dep.montant, 0)
+        setTotalAmount(s => s + somme)
+        return somme
+    }
+
+    useLayoutEffect(() => {
+        setTotalAmount(0)
+        setSumEntretien(sumMontant('Entretien'))
+        setSumReparations(sumMontant('Réparation'))
+        setSumConsommations(sumMontant('Consommation'))
+        setSumAdministrations(sumMontant('Administration'))
+        setSumAutres(sumMontant('Autres'))
+    }, [types, depenses])
 
     useEffect(() => {
-        const getAllCars = async () => {
-            const cars = await carService.getCars() as Car[]
-            const result = await getDepenses(cars.map(car => car._id))
-            setDepenses(result)
-        }
-        getAllCars()
-    }, [])
+        getImmatriculations().then(immatriculations => {
+            const period = periodes[selectedPeriod].value
+            getDepensesByPeriod(immatriculations as string[], period).then(result => {
+                setDepenses(result)
+            })
+        });
+    }, [selectedPeriod])
 
-
-    useEffect(() => {
-        const getMontant = async () => {
-            const coll = collection(database, TABLE.DEPENSE);
-            const snapshot = await getAggregateFromServer(coll, {
-                montant: sum('montant')
-            });
-
-            console.log('MontantTotal: ', snapshot.data().montant);
-        }
-
-        getMontant()
-    }, [])
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
             <StatusBar style="dark" backgroundColor={COLORS.white} />
@@ -83,7 +123,7 @@ const Depense = () => {
                                             color: selectedPeriod == index ? COLORS.secondary : COLORS.black,
                                             opacity: selectedPeriod == index ? 1 : 0.5
                                         }}
-                                        className="text-sm">{periode}</Text>
+                                        className="text-sm">{periode.libelle}</Text>
                                 </Pressable>
                             ))
                         }
@@ -91,43 +131,50 @@ const Depense = () => {
                 </View>
 
                 {/* Total amount */}
-
                 <View className="mt-6 flex-row justify-between">
                     <Text
                         style={{ fontFamily: FONTS.SemiBold }}
                         className="text-lg">Total</Text>
                     <Text
                         style={{ fontFamily: FONTS.SemiBold, color: COLORS.thirdth }}
-                        className="text-sm">1.650.000 Fcfa</Text>
+                        className="text-sm">{totalAmount} Fcfa</Text>
                 </View>
 
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     className='mt-4'>
+
                     <DepenseGroup
-                        title="Réparation"
-                        subTitle="650.000 fcfa"
+                        title="Entretiens"
+                        subTitle={`${sumEntretien}`}
                         onPress={() => { }}>
                         <Icon.Tool color={COLORS.gray} strokeWidth={2} width={25} height={25} />
                     </DepenseGroup>
 
                     <DepenseGroup
-                        title="Chargement"
-                        subTitle="80.000 fcfa"
+                        title="Réparations"
+                        subTitle={`${sumReparations}`}
+                        onPress={() => { }}>
+                        <Icon.Tool color={COLORS.gray} strokeWidth={2} width={25} height={25} />
+                    </DepenseGroup>
+
+                    <DepenseGroup
+                        title="Consommations"
+                        subTitle={`${sumConsommations}`}
                         onPress={() => { }}>
                         <Icon.Thermometer color={COLORS.gray} strokeWidth={2} width={25} height={25} />
                     </DepenseGroup>
 
                     <DepenseGroup
-                        title="Administration"
-                        subTitle="52.000 fcfa"
+                        title="Administrations"
+                        subTitle={`${sumAdministrations}`}
                         onPress={() => { }}>
                         <Icon.FileText color={COLORS.gray} strokeWidth={2} width={25} height={25} />
                     </DepenseGroup>
 
                     <DepenseGroup
                         title="Autres"
-                        subTitle="842.000 fcfa"
+                        subTitle={`${sumAutres}`}
                         onPress={() => { }}>
                         <Icon.DollarSign color={COLORS.gray} strokeWidth={2} width={25} height={25} />
                     </DepenseGroup>
@@ -167,6 +214,3 @@ const Depense = () => {
 }
 
 export default Depense
-
-
-
