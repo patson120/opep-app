@@ -37,8 +37,6 @@ import useTypeDepense from "../../hooks/useTypeDepense"
 import SimpleToast from 'react-native-simple-toast'
 import useSousTypeDepense from "../../hooks/useSousTypeDepense"
 
-
-
 const { width } = Dimensions.get('window')
 const pattern = 'YYYY/MM/DD HH:mm:ss'
 

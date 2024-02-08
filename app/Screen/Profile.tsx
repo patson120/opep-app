@@ -55,7 +55,6 @@ const Profile = () => {
             </TouchableOpacity>
           </View>
         </View>
-
         <View className="mt-6">
           <Item label='Paramètres' ><Icon.Settings color={COLORS.gray} strokeWidth={2} width={20} height={20} /></Item>
           <Item label='A propos de nous' ><Icon.HelpCircle color={COLORS.gray} strokeWidth={2} width={20} height={20} /></Item>
@@ -67,8 +66,6 @@ const Profile = () => {
           <Item label='Politique de confidentialité' ><Icon.BookOpen color={COLORS.gray} strokeWidth={2} width={20} height={20} /></Item>
           <Item label='Termes et conditions' ><Icon.Edit color={COLORS.gray} strokeWidth={2} width={20} height={20} /></Item>
         </View>
-
-
       </KeyboardAwareScrollView>
     </SafeAreaView>
   )

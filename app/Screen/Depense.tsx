@@ -2,7 +2,7 @@
 import { StatusBar } from 'expo-status-bar'
 import moment from 'moment'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { Image, Pressable, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Pressable, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import * as Icon from 'react-native-feather'
 import { ScrollView } from 'react-native-gesture-handler'
 import BigButton from '../Components/BigButton'
@@ -48,7 +48,7 @@ const Depense = () => {
         },
         {
             libelle: "Année dernière",
-            value: `${moment().year()-1}-01-01T00:00:00+00:00`
+            value: `${moment().year() - 1}-01-01T00:00:00+00:00`
         }
     ]
 
@@ -58,6 +58,7 @@ const Depense = () => {
     const [sumAutres, setSumAutres] = useState(0)
     const [sumEntretien, setSumEntretien] = useState(0)
     const [totalAmount, setTotalAmount] = useState(0)
+    const [isLoading, setIsLoading] = useState(false)
 
     const { types } = useTypeDepense()
     const { getImmatriculations } = useCars()
@@ -71,22 +72,38 @@ const Depense = () => {
     }
 
     useLayoutEffect(() => {
+        setIsLoading(true)
         setTotalAmount(0)
         setSumEntretien(sumMontant('Entretien'))
         setSumReparations(sumMontant('Réparation'))
         setSumConsommations(sumMontant('Consommation'))
         setSumAdministrations(sumMontant('Administration'))
         setSumAutres(sumMontant('Autres'))
+        setIsLoading(false)
     }, [types, depenses])
 
     useEffect(() => {
+        getDepenses()
+    }, [selectedPeriod])
+
+
+    const getDepenses = async () => {
+        setIsLoading(true)
+        setTotalAmount(0)
         getImmatriculations().then(immatriculations => {
             const period = periodes[selectedPeriod].value
             getDepensesByPeriod(immatriculations as string[], period).then(result => {
                 setDepenses(result)
+                setIsLoading(false)
             })
         });
-    }, [selectedPeriod])
+    }
+
+    const onRefresh = async () => {
+        setIsLoading(true)
+        await getDepenses()
+        setIsLoading(false)
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -140,73 +157,86 @@ const Depense = () => {
                         className="text-sm">{totalAmount} Fcfa</Text>
                 </View>
 
-                <ScrollView
+                <FlatList
                     showsVerticalScrollIndicator={false}
-                    className='mt-4'>
+                    keyExtractor={(item) => `${item}`}
+                    data={[1]}
+                    refreshing={isLoading}
+                    onRefresh={onRefresh}
+                    renderItem={() => <View className='mt-4'>
+                        <View>
+                            <DepenseGroup
+                                title="Entretiens"
+                                subTitle={`${sumEntretien}`}
+                                onPress={() => { }}>
+                                <Icon.Crosshair color={COLORS.gray} strokeWidth={2} width={25} height={25} />
+                            </DepenseGroup>
 
-                    <DepenseGroup
-                        title="Entretiens"
-                        subTitle={`${sumEntretien}`}
-                        onPress={() => { }}>
-                        <Icon.Tool color={COLORS.gray} strokeWidth={2} width={25} height={25} />
-                    </DepenseGroup>
+                            <DepenseGroup
+                                title="Réparations"
+                                subTitle={`${sumReparations}`}
+                                onPress={() => { }}>
+                                <Icon.Tool color={COLORS.gray} strokeWidth={2} width={25} height={25} />
+                            </DepenseGroup>
 
-                    <DepenseGroup
-                        title="Réparations"
-                        subTitle={`${sumReparations}`}
-                        onPress={() => { }}>
-                        <Icon.Tool color={COLORS.gray} strokeWidth={2} width={25} height={25} />
-                    </DepenseGroup>
+                            <DepenseGroup
+                                title="Consommations"
+                                subTitle={`${sumConsommations}`}
+                                onPress={() => { }}>
+                                <Icon.Thermometer color={COLORS.gray} strokeWidth={2} width={25} height={25} />
+                            </DepenseGroup>
 
-                    <DepenseGroup
-                        title="Consommations"
-                        subTitle={`${sumConsommations}`}
-                        onPress={() => { }}>
-                        <Icon.Thermometer color={COLORS.gray} strokeWidth={2} width={25} height={25} />
-                    </DepenseGroup>
+                            <DepenseGroup
+                                title="Administrations"
+                                subTitle={`${sumAdministrations}`}
+                                onPress={() => { }}>
+                                <Icon.FileText color={COLORS.gray} strokeWidth={2} width={25} height={25} />
+                            </DepenseGroup>
 
-                    <DepenseGroup
-                        title="Administrations"
-                        subTitle={`${sumAdministrations}`}
-                        onPress={() => { }}>
-                        <Icon.FileText color={COLORS.gray} strokeWidth={2} width={25} height={25} />
-                    </DepenseGroup>
+                            <DepenseGroup
+                                title="Autres"
+                                subTitle={`${sumAutres}`}
+                                onPress={() => { }}>
+                                <Icon.DollarSign color={COLORS.gray} strokeWidth={2} width={25} height={25} />
+                            </DepenseGroup>
 
-                    <DepenseGroup
-                        title="Autres"
-                        subTitle={`${sumAutres}`}
-                        onPress={() => { }}>
-                        <Icon.DollarSign color={COLORS.gray} strokeWidth={2} width={25} height={25} />
-                    </DepenseGroup>
+                            <View className="mt-4 flex-row justify-between">
+                                <Text
+                                    style={{ fontFamily: FONTS.SemiBold }}
+                                    className="text-lg">Dépense récentes</Text>
+                                <TouchableOpacity
+                                    onPress={() => console.log("Voir plus")}>
+                                    <Text
+                                        style={{ fontFamily: FONTS.Regular, color: COLORS.gray, opacity: 0.6 }}
+                                        className="text-sm">Voir plus</Text>
+                                </TouchableOpacity>
+                            </View>
 
-                    <View className="mt-4 flex-row justify-between">
-                        <Text
-                            style={{ fontFamily: FONTS.SemiBold }}
-                            className="text-lg">Dépense récentes</Text>
-                        <TouchableOpacity
-                            onPress={() => console.log("Voir plus")}>
-                            <Text
-                                style={{ fontFamily: FONTS.Regular, color: COLORS.gray, opacity: 0.6 }}
-                                className="text-sm">Voir plus</Text>
-                        </TouchableOpacity>
-                    </View>
+                            {/* Liste des dépenses */}
+                            <View className="mt-4 mb-10">
+                                {
+                                    depenses.map((dep) => (
+                                        <DepenseItem
+                                            label={dep.description}
+                                            value1={dep.quantite ? `${dep.quantite}L/ ${moment(dep.date).format('LLL')}` : `${moment(dep.date).format('LLL')}`}
+                                            value2={`${dep.montant} Fcfa`}
+                                            key={`${dep._id}`}
+                                        />)
+                                    )
+                                }
 
-
-                    {/* Liste des dépenses */}
-                    <View className="mt-4 mb-10">
-                        {
-                            depenses.map((dep) => (
-                                <DepenseItem
-                                    label={dep.description}
-                                    value1={dep.quantite ? `${dep.quantite}L/ ${moment(dep.date).format('LLL')}` : `${moment(dep.date).format('LLL')}`}
-                                    value2={`${dep.montant} Fcfa`}
-                                    key={`${dep._id}`}
-                                />)
-                            )
-                        }
-                    </View>
-
-                </ScrollView>
+                                {
+                                    !depenses.length &&
+                                    <View className="flex-1 justify-center items-center h-52">
+                                        <Text
+                                            style={{ fontFamily: FONTS.Regular, color: COLORS.gray, opacity: 0.6 }}
+                                            className="text-sm">Aucune dépense...</Text>
+                                    </View>
+                                }
+                            </View>
+                        </View>
+                    </View>}
+                />
 
             </View>
         </SafeAreaView>

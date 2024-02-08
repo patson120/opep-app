@@ -1,29 +1,23 @@
 import Storage from '../Utils/Storage';
 import { User } from '../types';
+import carService from './Car'
 
 async function getAccount() {
-  return await Storage.get('account') as User | undefined;
+  return await Storage.get('account:opep') as User | undefined;
 }
 
 async function setAccount(data: User) {
-  return await Storage.set('account', data);
+  return await Storage.set('account:opep', data);
 }
 
 async function logout() {
-  return await Storage.set('account', null);
+  await carService.clearCars()
+  return await Storage.set('account:opep', null);
 }
 
-// async function setChats(chats: UserDataType[]) {
-//   return await Storage.set('chats', chats);
-// }
-// async function getChats() {
-//   return await Storage.get('chats') as UserDataType[] | null | undefined;;
-// }
 
 export default {
   logout,
   getAccount,
   setAccount,
-  // setChats,
-  // getChats
 };

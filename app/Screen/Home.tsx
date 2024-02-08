@@ -1,6 +1,6 @@
 
 
-import React from "react"
+import React, { useEffect, useLayoutEffect, useState } from "react"
 
 import { View, Text, SafeAreaView, Image, FlatList, ActivityIndicator } from 'react-native'
 import { COLORS } from "../Constants/Colors"
@@ -15,18 +15,23 @@ import * as Icon from 'react-native-feather'
 
 
 const Home = () => {
-    const { cars } = useCars()
+    const { cars, refresh } = useCars()
+    const [isLoading, setIsloading] = useState(false)
+    
+    const onRefresh = async () => {
+        setIsloading(true)
+        await refresh()
+        setIsloading(false)
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
             <StatusBar style="dark" backgroundColor={COLORS.white} />
-
             <View className="flex-1 px-6 pt-5">
                 <View className="w-24 pt-2">
                     <Image
                         source={require('../Assets/img/logo1 1.png')}
-                        className="mb-5 w-auto"
-                    />
+                        className="mb-5 w-auto"/>
                 </View>
                 <BigButton
                     title="Ajouter un véhicule"
@@ -51,6 +56,8 @@ const Home = () => {
                             showsVerticalScrollIndicator={false}
                             keyExtractor={({ _id }) => `${_id}`}
                             data={cars}
+                            refreshing={isLoading}
+                            onRefresh={onRefresh}
                             renderItem={({ item }) => <CarCard
                                 car={item}
                                 onPress={() => { Navigation.navigate("CarDetail", { car: item }) }} />}
