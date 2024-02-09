@@ -191,18 +191,14 @@ const CarDetail = () => {
 
                     {/* Liste des dépenses */}
                     <View className="mt-5 mb-10">
-
-                        {
-                            depenses.map((dep) => (
+                        { depenses.map((dep) => (
                                 <DepenseItem
                                     label={dep.description}
                                     value1={dep.quantite ? `${dep.quantite}L/ ${moment(dep.date).format('LLL')}` : `${moment(dep.date).format('LLL')}`}
                                     value2={`${dep.montant}`}
                                     key={`${dep._id}`}
-                                />)
-                            )
+                                />))
                         }
-
                         {
                             !depenses.length &&
                             <View className="flex-1 justify-center items-center h-52">
@@ -213,8 +209,6 @@ const CarDetail = () => {
                         }
 
                     </View>
-
-
                 </View>
             </ScrollView>
         </SafeAreaView>
