@@ -180,7 +180,6 @@ const CarDetail = () => {
                     </View>
 
                     {/* Total amount */}
-
                     <View className="mt-6 flex-row justify-between">
                         <Text
                             style={{ fontFamily: FONTS.SemiBold }}
