@@ -24,6 +24,7 @@ const CarDetail = () => {
     const [selectedType, setSelectedType] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
     const [depenses, setDepenses] = useState<Depense[]>([])
+    const [depensesBackUp, setDepensesBackUp] = useState<Depense[]>([])
 
     const [sumEntretiens, setSumEntretiens] = useState(0)
     const [sumReparations, setSumReparations] = useState(0)
@@ -33,42 +34,51 @@ const CarDetail = () => {
     const [totalAmount, setTotalAmount] = useState(0)
 
     let { types } = useTypeDepense()
-    types = [{"_id": "Tous", "libelle": "Tous"}, ...types]    
-
+    types = [{ "_id": "Tous", "libelle": "Tous" }, ...types]
 
     const getDepenses = async () => {
         setIsLoading(true)
-        // setTotalAmount(0)
+        setTotalAmount(0)
         getDepensesByIdCar(car._id).then(result => {
             setDepenses(result)
+            setDepensesBackUp(result)
             setIsLoading(false)
         })
     }
 
-    useEffect(() => {
-        getDepenses()
-    }, [])
-
+    const handleFilter = (index: number) => {
+        setTotalAmount(0)
+        setSelectedType(index)
+        if (types[index]._id === "Tous"){            
+            setTotalAmount(depensesBackUp.reduce((acc, dep) => acc + dep.montant, 0))
+            setDepenses(depensesBackUp)
+            return
+        }
+        setTotalAmount(sumMontant(types[index].libelle))
+        setDepenses(depensesBackUp.filter(dep => dep.type_depense === types[index]._id ))
+    }
 
     const sumMontant = (libelle: string) => {
         const type = types.find(type => type.libelle.toLowerCase().includes(libelle.toLowerCase()))?._id
-        const deps = depenses.filter(dep => dep.type_depense === type)
+        const deps = depensesBackUp.filter(dep => dep.type_depense === type)
         const somme = deps.reduce((acc, dep) => acc + dep.montant, 0)
-        setTotalAmount(s => s + somme)
         return somme
     }
 
     useLayoutEffect(() => {
         setIsLoading(true)
-        setTotalAmount(0)
         setSumEntretiens(sumMontant('Entretien'))
         setSumReparations(sumMontant('Réparation'))
         setSumConsommations(sumMontant('Consommation'))
         setSumAdministrations(sumMontant('Administration'))
         setSumAutres(sumMontant('Autres'))
+        setTotalAmount(depensesBackUp.reduce((acc, dep) => acc + dep.montant, 0))
         setIsLoading(false)
-    }, [depenses])
+    }, [depensesBackUp])
 
+    useEffect(() => {
+        getDepenses()
+    }, [])
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -126,35 +136,35 @@ const CarDetail = () => {
 
                         <CardTypeDepense
                             label='Entretiens'
-                            value={ `${sumEntretiens}`}
+                            value={`${sumEntretiens}`}
                             onPress={() => { }}>
                             <Icon.Crosshair color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
                         </CardTypeDepense>
 
                         <CardTypeDepense
                             label='Réparations'
-                            value={ `${sumReparations}`}
+                            value={`${sumReparations}`}
                             onPress={() => { }}>
                             <Icon.Tool color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
                         </CardTypeDepense>
 
                         <CardTypeDepense
                             label='Consommations'
-                            value={ `${sumConsommations}`}
+                            value={`${sumConsommations}`}
                             onPress={() => { }}>
                             <Icon.Thermometer color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
                         </CardTypeDepense>
 
                         <CardTypeDepense
                             label='Administrations'
-                            value={ `${sumAdministrations}`}
+                            value={`${sumAdministrations}`}
                             onPress={() => { }}>
                             <Icon.FileText color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
                         </CardTypeDepense>
 
                         <CardTypeDepense
                             label='Aures'
-                            value={ `${sumAutres}`}
+                            value={`${sumAutres}`}
                             onPress={() => { }}>
                             <Icon.DollarSign color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
                         </CardTypeDepense>
@@ -167,7 +177,7 @@ const CarDetail = () => {
                             {
                                 types.map((type, index) => (
                                     <Pressable
-                                        onPress={() => setSelectedType(index)}
+                                        onPress={() => handleFilter(index)}
                                         style={{ backgroundColor: selectedType == index ? COLORS.bgGray : COLORS.white }}
                                         key={`${index}`} className="px-4 py-2 mr-3 rounded-md">
                                         <Text
@@ -191,13 +201,13 @@ const CarDetail = () => {
 
                     {/* Liste des dépenses */}
                     <View className="mt-5 mb-10">
-                        { depenses.map((dep) => (
-                                <DepenseItem
-                                    label={dep.description}
-                                    value1={dep.quantite ? `${dep.quantite}L/ ${moment(dep.date).format('LLL')}` : `${moment(dep.date).format('LLL')}`}
-                                    value2={`${dep.montant}`}
-                                    key={`${dep._id}`}
-                                />))
+                        {depenses.map((dep) => (
+                            <DepenseItem
+                                label={dep.description}
+                                value1={dep.quantite ? `${dep.quantite}L/ ${moment(dep.date).format('LLL')}` : `${moment(dep.date).format('LLL')}`}
+                                value2={`${dep.montant}`}
+                                key={`${dep._id}`}
+                            />))
                         }
                         {
                             !depenses.length &&

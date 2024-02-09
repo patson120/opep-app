@@ -73,6 +73,8 @@ const DepenseForm = () => {
                 description : (Number(montant) ?
                     `Consommation de ${Number(quantite) > 0 ? Number(quantite) + 'L' : '' } (${sousTypes[selectedSousType].libelle})` :
                     `${types[selectedType].libelle}`),
+
+            // description: description ? `${description} (${types[selectedType].libelle})` : `${types[selectedType].libelle === "Autre" ? types[selectedType].libelle : types[selectedType].libelle + "(" + sousTypes[selectedSousType].libelle +")"} `,
             montant: Number(montant),
             quantite: Number(quantite),
             type_depense: types[selectedType]._id,
