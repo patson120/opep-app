@@ -39,7 +39,14 @@ const Signup = () => {
 
 
     const handleSubmit = () => {
+        if (isLoading) return
         setIsLoading(true)
+
+        if (name === '' || contact === '' || password === '') {
+            SimpleToast.show('Veuillez renseigner tous les champs svp!', 3)
+            setIsLoading(false)
+            return 
+        }
 
         const user: User = {
             _id: uuid.v4().toString(),
@@ -80,12 +87,8 @@ const Signup = () => {
                 className="flex-1"
                 behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
 
-                <View
-                    className="px-7 pt-12"
-                >
-                    <View
-                        className="w-24 mb-4"
-                    >
+                <View className="px-7 pt-12">
+                    <View className="w-24 mb-4">
                         <Image
                             source={require('../../Assets/img/logo1 1.png')}
                             className="mb-5 w-auto"

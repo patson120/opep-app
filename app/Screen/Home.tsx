@@ -17,7 +17,7 @@ import * as Icon from 'react-native-feather'
 const Home = () => {
     const { cars, refresh } = useCars()
     const [isLoading, setIsloading] = useState(false)
-    
+
     const onRefresh = async () => {
         setIsloading(true)
         await refresh()
@@ -31,7 +31,7 @@ const Home = () => {
                 <View className="w-24 pt-2">
                     <Image
                         source={require('../Assets/img/logo1 1.png')}
-                        className="mb-5 w-auto"/>
+                        className="mb-5 w-auto" />
                 </View>
                 <BigButton
                     title="Ajouter un véhicule"
@@ -47,21 +47,32 @@ const Home = () => {
 
                 {/* Mes véhicules */}
                 {
-                    cars.length == 0 ?
-                        <View className="flex-1 justify-center items-center">
-                            <ActivityIndicator size="large" color={COLORS.secondary} />
-                        </View> :
+                    (cars.length == 0 && isLoading) &&
+                    <View className="flex-1 justify-center items-center">
+                        <ActivityIndicator size="large" color={COLORS.secondary} />
+                    </View>
+                }
 
-                        <FlatList
-                            showsVerticalScrollIndicator={false}
-                            keyExtractor={({ _id }) => `${_id}`}
-                            data={cars}
-                            refreshing={isLoading}
-                            onRefresh={onRefresh}
-                            renderItem={({ item }) => <CarCard
-                                car={item}
-                                onPress={() => { Navigation.navigate("CarDetail", { car: item }) }} />}
-                        />
+                {
+                   (cars.length > 0) && <FlatList
+                        showsVerticalScrollIndicator={false}
+                        keyExtractor={({ _id }) => `${_id}`}
+                        data={cars}
+                        refreshing={isLoading}
+                        onRefresh={onRefresh}
+                        renderItem={({ item }) => <CarCard
+                            car={item}
+                            onPress={() => { Navigation.navigate("CarDetail", { car: item }) }} />}
+                    />
+                }
+
+                {
+                    !cars.length &&
+                    <View className="flex-1 justify-center items-center h-52">
+                        <Text
+                            style={{ fontFamily: FONTS.Regular, color: COLORS.gray, opacity: 0.6 }}
+                            className="text-sm">Aucun véhicule...</Text>
+                    </View>
                 }
 
             </View>

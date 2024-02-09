@@ -71,7 +71,7 @@ const CarDetail = () => {
         setSumReparations(sumMontant('Réparation'))
         setSumConsommations(sumMontant('Consommation'))
         setSumAdministrations(sumMontant('Administration'))
-        setSumAutres(sumMontant('Autres'))
+        setSumAutres(sumMontant('Autre'))
         setTotalAmount(depensesBackUp.reduce((acc, dep) => acc + dep.montant, 0))
         setIsLoading(false)
     }, [depensesBackUp])

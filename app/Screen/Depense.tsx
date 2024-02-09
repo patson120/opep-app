@@ -78,7 +78,7 @@ const Depense = () => {
         setSumReparations(sumMontant('Réparation'))
         setSumConsommations(sumMontant('Consommation'))
         setSumAdministrations(sumMontant('Administration'))
-        setSumAutres(sumMontant('Autres'))
+        setSumAutres(sumMontant('Autre'))
         setIsLoading(false)
     }, [types, depenses])
 

@@ -29,8 +29,6 @@ import { useDispatch } from "react-redux"
 import { setUser } from "../../Redux/users"
 import { StatusBar } from "expo-status-bar"
 
-
-
 const Login = () => {
     const dispatch = useDispatch()
     const [contact, setContact] = useState<string>('')
@@ -44,7 +42,7 @@ const Login = () => {
         if (contact.trim() !== "" && password.trim() !== "") {
             const userQuery = query(collection(database, TABLE.USER), where("contact", "==", contact.trim()))
             const querySnapshot = await getDocs(userQuery)
-            if (querySnapshot.empty){
+            if (querySnapshot.empty) {
                 SimpleToast.show("Utilisateur inexistant !", 3)
                 setIsLoading(false)
                 return
@@ -120,10 +118,7 @@ const Login = () => {
 
                     <TouchableOpacity
                         className='mt-5'
-                        onPress={() => {
-                            console.log("Mot de passe oublié")
-                        }}
-                    >
+                        onPress={() => { console.log("Mot de passe oublié") }}>
                         <Text
                             style={{ fontFamily: FONTS.Regular }}
                             className="underline"
