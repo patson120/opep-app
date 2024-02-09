@@ -11,6 +11,7 @@ import { FONTS } from '../Constants/Font'
 import Navigation from '../Service/Navigation'
 import CardTypeDepense from '../Components/CardTypeDepense'
 import DepenseItem from '../Components/DepenseItem'
+import moment from 'moment'
 
 const CarDetail = () => {
 
@@ -19,7 +20,7 @@ const CarDetail = () => {
     const { params } = useRoute()
     const { car } = params as Car
 
-    const types: string[] = ["Tous", "Réparation", "Chargement", "Administration"]
+    const types: string[] = ["Tous", "Entretiens", "Réparations", "Consommations", "Administration", "Autres"]
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -63,7 +64,7 @@ const CarDetail = () => {
                         <Text
                             style={{ fontFamily: FONTS.Regular }}
                             className="text-left text-xs text-[#9D9D9D] mt-2">
-                            Ajouter le 20 Octobre 2021
+                            Ajouter le { moment(car.createdAt).format('llll')}
                         </Text>
                     </View>
                 </View>
@@ -74,26 +75,42 @@ const CarDetail = () => {
                         style={{ fontFamily: FONTS.Bold, opacity: 0.8 }}>
                         Résumé</Text>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+
                         <CardTypeDepense
-                            label='Réparation'
+                            label='Entretiens'
                             value='1 000 000 Fcfa'
                             onPress={() => { }}>
-                            <Icon.Tool color={COLORS.gray} strokeWidth={2} width={25} height={25} />
+                            <Icon.Crosshair color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
                         </CardTypeDepense>
 
                         <CardTypeDepense
-                            label='Chargement'
+                            label='Réparations'
+                            value='1 000 000 Fcfa'
+                            onPress={() => { }}>
+                            <Icon.Tool color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
+                        </CardTypeDepense>
+
+                        <CardTypeDepense
+                            label='Consommations'
                             value='500 000 Fcfa'
                             onPress={() => { }}>
-                            <Icon.Thermometer color={COLORS.gray} strokeWidth={2} width={25} height={25} />
+                            <Icon.Thermometer color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
                         </CardTypeDepense>
 
                         <CardTypeDepense
-                            label='Administration'
+                            label='Administrations'
                             value='150 000 Fcfa'
                             onPress={() => { }}>
-                            <Icon.FileText color={COLORS.gray} strokeWidth={2} width={25} height={25} />
+                            <Icon.FileText color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
                         </CardTypeDepense>
+
+                        <CardTypeDepense
+                            label='Aures'
+                            value='150 000 Fcfa'
+                            onPress={() => { }}>
+                            <Icon.DollarSign color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
+                        </CardTypeDepense>
+
                     </ScrollView>
 
                     {/* Type Depenses */}
