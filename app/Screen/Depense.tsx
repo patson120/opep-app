@@ -90,9 +90,14 @@ const Depense = () => {
     const getDepenses = async () => {
         setIsLoading(true)
         setTotalAmount(0)
+        let endDate = ''
+        
+        if (periodes[selectedPeriod].libelle === "Année dernière") {
+            endDate = `${moment().year() - 1}-12-31T23:59:59+00:00`
+        }
         getImmatriculations().then(immatriculations => {
             const period = periodes[selectedPeriod].value
-            getDepensesByPeriod(immatriculations as string[], period).then(result => {
+            getDepensesByPeriod(immatriculations as string[], period, endDate).then(result => {
                 setDepenses(result)
                 setIsLoading(false)
             })

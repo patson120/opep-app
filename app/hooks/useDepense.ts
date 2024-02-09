@@ -32,12 +32,25 @@ const useDepense = () => {
         return depenses
     }
 
-    const getDepensesByPeriod = async (immatriculations: string[], period: string) => {
-        const depensesQuery = query(
-            collection(database, TABLE.DEPENSE),
-            where("vehiculeId", "in", immatriculations),
-            where("date", ">=", period),
+    const getDepensesByPeriod = async (immatriculations: string[], period: string, endDate?: string) => {
+        let depensesQuery = null
+
+        if (endDate) {
+            depensesQuery = query(
+                collection(database, TABLE.DEPENSE),
+                where("vehiculeId", "in", immatriculations),
+                where("date", ">=", period),
+                where("date", "<=", endDate),
             )
+        }
+        else {
+            depensesQuery = query(
+                collection(database, TABLE.DEPENSE),
+                where("vehiculeId", "in", immatriculations),
+                where("date", ">=", period),
+            )
+        }
+
         const querySnapshot = await getDocs(depensesQuery)
         depenses = []
         querySnapshot.forEach((doc) => {

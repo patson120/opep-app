@@ -25,7 +25,7 @@ const Profile = () => {
   }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-      <StatusBar hidden />
+      <StatusBar style='light' />
       <KeyboardAwareScrollView
         className="flex-1 px-7 pt-12"
         behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
