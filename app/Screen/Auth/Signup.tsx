@@ -92,15 +92,10 @@ const Signup = () => {
                         />
 
                     </View>
-                    <Text
-                        style={{ fontFamily: FONTS.Bold }}
-                        className='text-3xl'
-                    >
-                        Inscription</Text>
-                    <Text
-                        style={{ fontFamily: FONTS.Regular }}
-                        className="text-left mt-1 mb-2 text-sm text-[#9D9D9D]"
-                    >
+                    <Text style={{ fontFamily: FONTS.Bold }}
+                        className='text-3xl'>Inscription</Text>
+                    <Text style={{ fontFamily: FONTS.Regular }}
+                        className="text-left mt-1 mb-2 text-sm text-[#9D9D9D]">
                         Retrouver l’activité de vos véhicules dans un seul endroit
                     </Text>
 
@@ -109,12 +104,16 @@ const Signup = () => {
                         placeholder="Entrez votre nom"
                         data={name}
                         setData={setName}
+                        keyboardType="default"
+                        showIcon={false}
                     />
                     <InputField
                         label={'Téléphone / Email'}
                         placeholder="00 - 000 - 000 - 000"
                         data={contact}
                         setData={setContact}
+                        keyboardType="default"
+                        showIcon={false}
                     />
                     <InputField
                         label={'Mot de passe'}
@@ -122,6 +121,7 @@ const Signup = () => {
                         data={password}
                         setData={setPassword}
                         showIcon={true}
+                        keyboardType="default"
                     />
                     <PrimaryButton
                         onPress={handleSubmit}
@@ -129,18 +129,13 @@ const Signup = () => {
                         isLoading={isLoading}
                     />
                     <View className='flex-row mt-5'>
-                        <Text
-                            style={{ fontFamily: FONTS.Regular }}
-                            className="mr-1"
-                        >Avez-vous un compte ?</Text>
+                        <Text style={{ fontFamily: FONTS.Regular }}
+                            className="mr-1">Avez-vous un compte ?</Text>
                         <TouchableOpacity
                             className=''
-                            onPress={() => Navigation.navigate('Login')}
-                        >
-                            <Text
-                                style={{ fontFamily: FONTS.Bold, color: COLORS.thirdth }}
-                                className=""
-                            >Connexion</Text>
+                            onPress={() => Navigation.navigate('Login')}>
+                            <Text style={{ fontFamily: FONTS.Bold, color: COLORS.thirdth }}
+                                className="">Connexion</Text>
                         </TouchableOpacity>
                     </View>
 

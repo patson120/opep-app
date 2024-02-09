@@ -130,6 +130,8 @@ const VehiculeForm = () => {
                     placeholder="Ex: OU466GT"
                     data={immatriculation}
                     setData={setImmatriculation}
+                    keyboardType="default"
+                    showIcon={false}
                 />
                 <Text
                     style={{ fontFamily: FONTS.Regular }}

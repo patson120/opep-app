@@ -38,16 +38,22 @@ const Login = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const handleSubmit = async () => {
+        if (isLoading) return
         setIsLoading(true)
 
         if (contact.trim() !== "" && password.trim() !== "") {
             const userQuery = query(collection(database, TABLE.USER), where("contact", "==", contact.trim()))
             const querySnapshot = await getDocs(userQuery)
+            if (querySnapshot.empty){
+                SimpleToast.show("Utilisateur inexistant !", 3)
+                setIsLoading(false)
+                return
+            }
 
             querySnapshot.forEach((doc) => {
-                const user: User = doc.data() as User;
+                const user: User = doc.data() as User
                 bcrypt.compare(password, user.password, async (err: Error, pass: boolean) => {
-                    if (!err) {
+                    if (pass) {
                         setContact('')
                         setPassword('')
                         dispatch(setUser(user))
@@ -95,12 +101,13 @@ const Login = () => {
                         Retrouver l’activité de vos véhicules dans un seul endroit
                     </Text>
 
-
                     <InputField
                         label={'Téléphone / Email'}
                         placeholder="00 - 000 - 000 - 000"
                         data={contact}
                         setData={setContact}
+                        keyboardType="default"
+                        showIcon={false}
                     />
                     <InputField
                         label={'Mot de passe'}
@@ -108,6 +115,7 @@ const Login = () => {
                         data={password}
                         setData={setPassword}
                         showIcon={true}
+                        keyboardType="default"
                     />
 
                     <TouchableOpacity
@@ -132,16 +140,12 @@ const Login = () => {
                     <View className='flex-row mt-5'>
                         <Text
                             style={{ fontFamily: FONTS.Regular }}
-                            className="mr-1"
-                        >Pas de compte ?</Text>
+                            className="mr-1">Pas de compte ?</Text>
                         <TouchableOpacity
                             className=''
-                            onPress={() => Navigation.navigate('Signup')}
-                        >
-                            <Text
-                                style={{ fontFamily: FONTS.Bold, color: COLORS.thirdth }}
-                                className=""
-                            >S'inscrire</Text>
+                            onPress={() => Navigation.navigate('Signup')}>
+                            <Text style={{ fontFamily: FONTS.Bold, color: COLORS.thirdth }}
+                                className="">S'inscrire</Text>
                         </TouchableOpacity>
                     </View>
 

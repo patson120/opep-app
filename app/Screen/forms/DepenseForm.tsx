@@ -212,6 +212,8 @@ const DepenseForm = () => {
                     placeholder="Ex: 3500"
                     data={montant}
                     setData={setMontant}
+                    keyboardType="numeric"
+                    showIcon={false}
                 />
 
                 {
@@ -221,6 +223,8 @@ const DepenseForm = () => {
                         placeholder="Ex: 03"
                         data={quantite}
                         setData={setQuantite}
+                        keyboardType="numeric"
+                        showIcon={false}
                     />
                 }
 
@@ -241,6 +245,8 @@ const DepenseForm = () => {
                     placeholder="Entrez une description de la dépense..."
                     data={description}
                     setData={setDescription}
+                    keyboardType="default"
+                    showIcon={false}
                 />
 
                 <View className="mt-10 mb-8 flex-row justify-between">
