@@ -224,7 +224,7 @@ const Depense = () => {
                                         <DepenseItem
                                             label={dep.description}
                                             value1={dep.quantite ? `${dep.quantite}L/ ${moment(dep.date).format('LLL')}` : `${moment(dep.date).format('LLL')}`}
-                                            value2={`${dep.montant} Fcfa`}
+                                            value2={`${dep.montant}`}
                                             key={`${dep._id}`}
                                         />)
                                     )

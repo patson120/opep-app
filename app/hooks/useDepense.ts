@@ -59,8 +59,21 @@ const useDepense = () => {
         return depenses
     }
 
+    const getDepensesByIdCar = async (immatriculation: string) => {
+        let depensesQuery = query(
+            collection(database, TABLE.DEPENSE),
+            where("vehiculeId", "==", immatriculation)
+        )
+        const querySnapshot = await getDocs(depensesQuery)
+        depenses = []
+        querySnapshot.forEach((doc) => {
+            depenses.push({ ...doc.data() } as Depense)
+        })
+        return depenses
+    }
 
-    return { getDepenses, getDepensesByPeriod }
+
+    return { getDepenses, getDepensesByPeriod, getDepensesByIdCar }
 }
 
 export default useDepense

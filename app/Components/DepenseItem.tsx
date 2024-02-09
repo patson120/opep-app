@@ -24,7 +24,7 @@ const DepenseItem: FC<DepenseProps> = ({ label, value1, value2 }) => {
                     className="text-xs">{value1}</Text>
                 <Text
                     style={{ fontFamily: FONTS.SemiBold }}
-                    className="text-xs">{value2}</Text>
+                    className="text-xs">{value2} Fcfa</Text>
             </View>
             <View
                 style={{ borderWidth: 0.8, borderColor: 'gray', opacity: 0.15 }}

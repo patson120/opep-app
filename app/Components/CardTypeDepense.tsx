@@ -18,11 +18,11 @@ const CardTypeDepense: FC<CardProps> = ({ label, value, children, onPress }) => 
             className="w-36 p-3 mr-3 rounded-md justify-center">
             {children}
             <Text
-                style={{ fontFamily: FONTS.SemiBold }}
+                style={{ fontFamily: FONTS.Regular }}
                 className="text-sm my-2">{label}</Text>
             <Text
-                style={{ fontFamily: FONTS.Regular, color: COLORS.thirdth }}
-                className='text-sm'>{value}</Text>
+                style={{ fontFamily: FONTS.SemiBold, color: COLORS.thirdth }}
+                className='text-sm'>{value} Fcfa</Text>
         </TouchableOpacity>
     )
 }

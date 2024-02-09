@@ -1,26 +1,74 @@
 
 
-import { View, Text, SafeAreaView, Image, TouchableOpacity, GestureResponderEvent, ScrollView, Pressable } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, SafeAreaView, Image, TouchableOpacity, ScrollView, Pressable } from 'react-native'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { COLORS } from '../Constants/Colors'
 import { StatusBar } from 'expo-status-bar'
 import { useRoute } from '@react-navigation/native'
 import * as Icon from 'react-native-feather'
-import { Car } from '../types'
+import { Car, Depense } from '../types'
 import { FONTS } from '../Constants/Font'
 import Navigation from '../Service/Navigation'
 import CardTypeDepense from '../Components/CardTypeDepense'
 import DepenseItem from '../Components/DepenseItem'
 import moment from 'moment'
+import useDepense from '../hooks/useDepense'
+import useTypeDepense from '../hooks/useTypeDepense'
 
 const CarDetail = () => {
 
-    const [selectedType, setSelectedType] = useState(0)
-
+    const { getDepensesByIdCar } = useDepense()
     const { params } = useRoute()
     const { car } = params as Car
 
-    const types: string[] = ["Tous", "Entretiens", "Réparations", "Consommations", "Administration", "Autres"]
+    const [selectedType, setSelectedType] = useState(0)
+    const [isLoading, setIsLoading] = useState(false)
+    const [depenses, setDepenses] = useState<Depense[]>([])
+
+    const [sumEntretiens, setSumEntretiens] = useState(0)
+    const [sumReparations, setSumReparations] = useState(0)
+    const [sumConsommations, setSumConsommations] = useState(0)
+    const [sumAdministrations, setSumAdministrations] = useState(0)
+    const [sumAutres, setSumAutres] = useState(0)
+    const [totalAmount, setTotalAmount] = useState(0)
+
+    let { types } = useTypeDepense()
+    types = [{"_id": "Tous", "libelle": "Tous"}, ...types]    
+
+
+    const getDepenses = async () => {
+        setIsLoading(true)
+        // setTotalAmount(0)
+        getDepensesByIdCar(car._id).then(result => {
+            setDepenses(result)
+            setIsLoading(false)
+        })
+    }
+
+    useEffect(() => {
+        getDepenses()
+    }, [])
+
+
+    const sumMontant = (libelle: string) => {
+        const type = types.find(type => type.libelle.toLowerCase().includes(libelle.toLowerCase()))?._id
+        const deps = depenses.filter(dep => dep.type_depense === type)
+        const somme = deps.reduce((acc, dep) => acc + dep.montant, 0)
+        setTotalAmount(s => s + somme)
+        return somme
+    }
+
+    useLayoutEffect(() => {
+        setIsLoading(true)
+        setTotalAmount(0)
+        setSumEntretiens(sumMontant('Entretien'))
+        setSumReparations(sumMontant('Réparation'))
+        setSumConsommations(sumMontant('Consommation'))
+        setSumAdministrations(sumMontant('Administration'))
+        setSumAutres(sumMontant('Autres'))
+        setIsLoading(false)
+    }, [depenses])
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -64,7 +112,7 @@ const CarDetail = () => {
                         <Text
                             style={{ fontFamily: FONTS.Regular }}
                             className="text-left text-xs text-[#9D9D9D] mt-2">
-                            Ajouter le { moment(car.createdAt).format('llll')}
+                            Ajouter le {moment(car.createdAt).format('llll')}
                         </Text>
                     </View>
                 </View>
@@ -78,35 +126,35 @@ const CarDetail = () => {
 
                         <CardTypeDepense
                             label='Entretiens'
-                            value='1 000 000 Fcfa'
+                            value={ `${sumEntretiens}`}
                             onPress={() => { }}>
                             <Icon.Crosshair color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
                         </CardTypeDepense>
 
                         <CardTypeDepense
                             label='Réparations'
-                            value='1 000 000 Fcfa'
+                            value={ `${sumReparations}`}
                             onPress={() => { }}>
                             <Icon.Tool color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
                         </CardTypeDepense>
 
                         <CardTypeDepense
                             label='Consommations'
-                            value='500 000 Fcfa'
+                            value={ `${sumConsommations}`}
                             onPress={() => { }}>
                             <Icon.Thermometer color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
                         </CardTypeDepense>
 
                         <CardTypeDepense
                             label='Administrations'
-                            value='150 000 Fcfa'
+                            value={ `${sumAdministrations}`}
                             onPress={() => { }}>
                             <Icon.FileText color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
                         </CardTypeDepense>
 
                         <CardTypeDepense
                             label='Aures'
-                            value='150 000 Fcfa'
+                            value={ `${sumAutres}`}
                             onPress={() => { }}>
                             <Icon.DollarSign color={COLORS.secondary} strokeWidth={2} width={25} height={25} />
                         </CardTypeDepense>
@@ -124,7 +172,7 @@ const CarDetail = () => {
                                         key={`${index}`} className="px-4 py-2 mr-3 rounded-md">
                                         <Text
                                             style={{ fontFamily: selectedType == index ? FONTS.SemiBold : FONTS.Regular, opacity: selectedType == index ? 1 : 0.5 }}
-                                            className="text-sm">{type}</Text>
+                                            className="text-sm">{type.libelle}</Text>
                                     </Pressable>
                                 ))
                             }
@@ -139,32 +187,32 @@ const CarDetail = () => {
                             className="text-lg">Total</Text>
                         <Text
                             style={{ fontFamily: FONTS.SemiBold, color: COLORS.thirdth }}
-                            className="text-sm">280.000 Fcfa</Text>
+                            className="text-sm">{totalAmount} Fcfa</Text>
                     </View>
-
 
                     {/* Liste des dépenses */}
                     <View className="mt-5 mb-10">
-                        <DepenseItem
-                            label='Achat de Carburant'
-                            value1='20L/11 Octobre 2021'
-                            value2='15.000 Fcfa'
-                        />
-                        <DepenseItem
-                            label='Achat de Carburant'
-                            value1='20L/11 Octobre 2021'
-                            value2='15.000 Fcfa'
-                        />
-                        <DepenseItem
-                            label='Achat de Carburant'
-                            value1='20L/11 Octobre 2021'
-                            value2='15.000 Fcfa'
-                        />
-                        <DepenseItem
-                            label='Changement de rétroviseurs'
-                            value1='03 Décembre 2021'
-                            value2='15.000 Fcfa'
-                        />
+
+                        {
+                            depenses.map((dep) => (
+                                <DepenseItem
+                                    label={dep.description}
+                                    value1={dep.quantite ? `${dep.quantite}L/ ${moment(dep.date).format('LLL')}` : `${moment(dep.date).format('LLL')}`}
+                                    value2={`${dep.montant}`}
+                                    key={`${dep._id}`}
+                                />)
+                            )
+                        }
+
+                        {
+                            !depenses.length &&
+                            <View className="flex-1 justify-center items-center h-52">
+                                <Text
+                                    style={{ fontFamily: FONTS.Regular, color: COLORS.gray, opacity: 0.6 }}
+                                    className="text-sm">Aucune dépense...</Text>
+                            </View>
+                        }
+
                     </View>
 
 
