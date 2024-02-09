@@ -30,6 +30,7 @@ import { setUser } from "../../Redux/users"
 import { StatusBar } from "expo-status-bar"
 
 
+
 const Login = () => {
     const dispatch = useDispatch()
     const [contact, setContact] = useState<string>('')
@@ -106,6 +107,7 @@ const Login = () => {
                         placeholder="Entrez votre mot de passe"
                         data={password}
                         setData={setPassword}
+                        showIcon={true}
                     />
 
                     <TouchableOpacity

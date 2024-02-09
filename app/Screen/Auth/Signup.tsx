@@ -121,6 +121,7 @@ const Signup = () => {
                         placeholder="Entrez votre mot de passe"
                         data={password}
                         setData={setPassword}
+                        showIcon={true}
                     />
                     <PrimaryButton
                         onPress={handleSubmit}
