@@ -127,11 +127,13 @@ const VehiculeForm = () => {
                     placeholder="Entrer le modèle..."
                 />
 
-                <DropdownComponent
-                    label="Année de sortie"
+                <InputField
+                    label={'Année de sortie'}
+                    placeholder={`Ex: ${moment().year() - 1}`}
                     data={annee}
-                    onChangeValue={setAnnee}
-                    placeholder="Entrer l'année..."
+                    setData={setAnnee}
+                    keyboardType="default"
+                    showIcon={false}
                 />
 
                 <InputField
