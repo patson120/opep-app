@@ -43,6 +43,7 @@ const VehiculeForm = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [selectedModel, setSelectedModel] = useState<Model | null>()
     const [selectedMarque, setSelectedMarque] = useState<Marque | null>()
+    const [annee, setAnnee] = useState<string>('')
     const [immatriculation, setImmatriculation] = useState<string>('')
     const [image, setImage] = useState<string | null>(null)
     const [fileName, setFileName] = useState<string>('')
@@ -75,8 +76,9 @@ const VehiculeForm = () => {
         const car: Car = {
             _id: immatriculation.trim(),
             model: selectedModel!,
+            annee: annee,
             marque: selectedMarque!,
-            images: [  {url: uploadResp.downloadUrl, createdAt: moment().format()}],
+            images: [{ url: uploadResp.downloadUrl, createdAt: moment().format() }],
             userId: user._id!,
             createdAt: moment().format(''),
             updatedAt: moment().format('')
@@ -96,7 +98,7 @@ const VehiculeForm = () => {
                 className="flex-1 px-7 pt-6"
                 behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
                 <TouchableOpacity
-                onPress={() => Navigation.back()}>
+                    onPress={() => Navigation.back()}>
                     <Icon.ChevronLeft color={COLORS.black} strokeWidth={3} />
                 </TouchableOpacity>
                 <View className="mt-8">
@@ -123,6 +125,13 @@ const VehiculeForm = () => {
                     data={models}
                     onChangeValue={setSelectedModel}
                     placeholder="Entrer le modèle..."
+                />
+
+                <DropdownComponent
+                    label="Année de sortie"
+                    data={annee}
+                    onChangeValue={setAnnee}
+                    placeholder="Entrer l'année..."
                 />
 
                 <InputField

@@ -25,7 +25,7 @@ const CarCard: FC<Props> = ({ onPress, car }) => {
                 <Text
                     className='text-sm'
                     style={{ fontFamily: FONTS.SemiBold, opacity: 0.8 }}>
-                    {car.model.libelle}
+                    {car.model.libelle} * { car.annee }
                 </Text>
                 <Text
                     className='text-sm'

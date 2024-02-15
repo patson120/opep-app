@@ -13,6 +13,7 @@ export type Car = {
     _id: string;
     model: Model;
     marque: Marque;
+    annee: string;
     images: ImageType[];
     userId: string;
     createdAt: string;
