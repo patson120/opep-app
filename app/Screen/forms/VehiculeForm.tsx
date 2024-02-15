@@ -132,7 +132,7 @@ const VehiculeForm = () => {
                     placeholder={`Ex: ${moment().year() - 1}`}
                     data={annee}
                     setData={setAnnee}
-                    keyboardType="default"
+                    keyboardType="numeric"
                     showIcon={false}
                 />
 
@@ -146,7 +146,7 @@ const VehiculeForm = () => {
                 />
                 <Text
                     style={{ fontFamily: FONTS.Regular }}
-                    className="text-left mt-4 text-base text-black">
+                    className="text-left mt-4 text-sm text-black">
                     Ajouter une photo
                 </Text>
                 {image ?

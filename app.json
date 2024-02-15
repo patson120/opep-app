@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.opep.app",
+      "package": "com.opep.com",
       "googleServicesFile": "./google-services.json"
     },
     "web": {
@@ -35,7 +35,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "ae3888db-d17f-49fa-bba3-4eb7d9bd1d1f"
+        "projectId": "d1d17ef8-19f0-4011-962e-f642f3c78f0c"
       }
     }
   }

@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:791626645352:android:8a98b4637964a9f70020dd",
+        "mobilesdk_app_id": "1:791626645352:android:59c1a5aeea5c79580020dd",
         "android_client_info": {
-          "package_name": "com.opep.com"
+          "package_name": "com.opep.app"
         }
       },
       "oauth_client": [],
