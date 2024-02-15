@@ -45,7 +45,7 @@ const Signup = () => {
         if (name === '' || contact === '' || password === '') {
             SimpleToast.show('Veuillez renseigner tous les champs svp!', 3)
             setIsLoading(false)
-            return 
+            return
         }
 
         const user: User = {
@@ -60,6 +60,7 @@ const Signup = () => {
         // Hash du mot de password
         bcrypt.hash(user.password, 10, async (err: Error, passwordHash: string | undefined) => {
             if (!err) {
+
                 // Add a new document in collection USER
                 await setDoc(doc(database, TABLE.USER, `${user._id}`), {
                     ...user,

@@ -1,8 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytesResumable, } from "firebase/storage";
 import Constants from './constants';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL,  } from "firebase/storage";
 
 
 
@@ -52,8 +51,9 @@ const uploadToFirebase = async (uri, fileName, bucket, onProgress) => {
 
 
 
-export { 
-  app, 
+export {
+  app,
   // auth, 
-  database, 
-  uploadToFirebase };
+  database,
+  uploadToFirebase
+};

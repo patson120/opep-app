@@ -40,7 +40,8 @@ const Login = () => {
         setIsLoading(true)
 
         if (contact.trim() !== "" && password.trim() !== "") {
-            const userQuery = query(collection(database, TABLE.USER), where("contact", "==", contact.trim()))
+            const userQuery = query(collection(database, TABLE.USER),  where("contact", "==", contact.trim())
+            )
             const querySnapshot = await getDocs(userQuery)
             if (querySnapshot.empty) {
                 SimpleToast.show("Utilisateur inexistant !", 3)
@@ -125,13 +126,11 @@ const Login = () => {
                         >Mot de passe oublié ?</Text>
                     </TouchableOpacity>
 
-
                     <PrimaryButton
                         onPress={handleSubmit}
                         label='Connexion'
                         isLoading={isLoading}
                     />
-
                     <View className='flex-row mt-5'>
                         <Text
                             style={{ fontFamily: FONTS.Regular }}
@@ -151,4 +150,3 @@ const Login = () => {
 }
 
 export default Login;
-

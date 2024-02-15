@@ -9,3 +9,4 @@ export const TABLE = {
     SOUS_TYPE_DEPENSE: "SOUS_TYPE_DEPENSE",
     DEPENSE: "DEPENSE",
 }
+
