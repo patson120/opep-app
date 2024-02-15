@@ -32,6 +32,11 @@
       "Permissions.INTERNET",
       "Permissions.WRITE_EXTERNAL_STORAGE",
       "Permissions.READ_EXTERNAL_STORAGE"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "90dbb713-c342-4ab8-a6e0-f89638a1636e"
+      }
+    }
   }
 }

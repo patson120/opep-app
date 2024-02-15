@@ -1,6 +1,6 @@
 
 
-import React, { useEffect, useLayoutEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import { View, Text, SafeAreaView, Image, FlatList, ActivityIndicator } from 'react-native'
 import { COLORS } from "../Constants/Colors"
@@ -23,6 +23,13 @@ const Home = () => {
         await refresh()
         setIsloading(false)
     }
+
+    useEffect(() => {
+        setIsloading(true)
+        setTimeout(() => {
+            setIsloading(false)
+        }, 3000);
+    }, [cars])
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -67,7 +74,7 @@ const Home = () => {
                 }
 
                 {
-                    !cars.length &&
+                    (cars.length == 0 && !isLoading)  &&
                     <View className="flex-1 justify-center items-center h-52">
                         <Text
                             style={{ fontFamily: FONTS.Regular, color: COLORS.gray, opacity: 0.6 }}
