@@ -101,6 +101,7 @@ const Depense = () => {
                 setDepenses(result)
                 setIsLoading(false)
             })
+
         });
     }
 

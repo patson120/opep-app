@@ -1,16 +1,36 @@
 
 import { View, Text, TouchableOpacity, Image } from 'react-native'
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Car } from '../types'
 import { FONTS } from '../Constants/Font'
 import { COLORS } from '../Constants/Colors'
+import useDepense from '../hooks/useDepense'
+import moment from 'moment'
 
 interface Props {
     onPress: () => void
     car: Car
 }
 
+
+const THIS_MONTH = moment(new Date(moment().year(), moment().month(), 1, 0, 0, 0)).format()
+
 const CarCard: FC<Props> = ({ onPress, car }) => {
+
+    const { getDepensesByPeriod } = useDepense()
+
+    const [montant, setMontant] = useState(0)
+
+    const getDepenseByCarId = async (immatriculation: string) => {
+        const depenses = await getDepensesByPeriod([immatriculation], THIS_MONTH)
+        setMontant(depenses.reduce((acc, dep) => acc + dep.montant, 0))
+
+    }
+
+    useEffect(() => {
+        getDepenseByCarId(car._id)
+    }, [])
+
     return (
         <TouchableOpacity
             onPress={onPress}
@@ -25,7 +45,7 @@ const CarCard: FC<Props> = ({ onPress, car }) => {
                 <Text
                     className='text-sm'
                     style={{ fontFamily: FONTS.SemiBold, opacity: 0.8 }}>
-                    {car.model.libelle} * { car.annee }
+                    {car.model.libelle} * {car.annee}
                 </Text>
                 <Text
                     className='text-sm'
@@ -36,7 +56,7 @@ const CarCard: FC<Props> = ({ onPress, car }) => {
             <Text
                 className='text-xs mt-1'
                 style={{ fontFamily: FONTS.SemiBold, color: COLORS.thirdth, opacity: 0.8 }}>
-                75 000 Fcfa ce mois</Text>
+                {montant} Fcfa ce mois</Text>
             <View
                 style={{ borderWidth: 0.8, borderColor: 'gray', opacity: 0.1 }}
                 className="w-full border-gray-100 my-2"></View>

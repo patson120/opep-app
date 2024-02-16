@@ -2,17 +2,16 @@
 
 import React, { useEffect, useState } from "react"
 
-import { View, Text, SafeAreaView, Image, FlatList, ActivityIndicator } from 'react-native'
-import { COLORS } from "../Constants/Colors"
 import { StatusBar } from "expo-status-bar"
+import { ActivityIndicator, FlatList, Image, SafeAreaView, Text, View } from 'react-native'
+import { COLORS } from "../Constants/Colors"
 
+import * as Icon from 'react-native-feather'
+import BigButton from "../Components/BigButton"
+import CarCard from "../Components/CarCard"
 import { FONTS } from "../Constants/Font"
 import Navigation from "../Service/Navigation"
-import CarCard from "../Components/CarCard"
-import BigButton from "../Components/BigButton"
 import useCars from "../hooks/useCars"
-import * as Icon from 'react-native-feather'
-
 
 const Home = () => {
     const { cars, refresh } = useCars()

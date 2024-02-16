@@ -51,7 +51,8 @@ const useDepense = () => {
             )
         }
 
-        const querySnapshot = await getDocs(depensesQuery)
+        const querySnapshot = await getDocs(depensesQuery) 
+        
         depenses = []
         querySnapshot.forEach((doc) => {
             depenses.push({ ...doc.data() } as Depense)
