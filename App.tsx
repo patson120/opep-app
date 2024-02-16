@@ -7,7 +7,6 @@ import { Provider } from "react-redux"
 import RootNavigator from "./app/Navigation/RootNavigator"
 import { store } from "./app/Redux"
 
-
 export default function App() {
     return (
         <Provider store={store}>
