@@ -1,11 +1,12 @@
 
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import React, { FC, useEffect, useState } from 'react'
-import { Car } from '../types'
+import { Car, Depense, Model } from '../types'
 import { FONTS } from '../Constants/Font'
 import { COLORS } from '../Constants/Colors'
 import useDepense from '../hooks/useDepense'
 import moment from 'moment'
+import useTypeDepense from '../hooks/useTypeDepense'
 
 interface Props {
     onPress: () => void
@@ -18,18 +19,28 @@ const THIS_MONTH = moment(new Date(moment().year(), moment().month(), 1, 0, 0, 0
 const CarCard: FC<Props> = ({ onPress, car }) => {
 
     const { getDepensesByPeriod } = useDepense()
+    const { types } = useTypeDepense()
 
     const [montant, setMontant] = useState(0)
+    const [nbrReparations, setNbrReparations] = useState(0)
+    const [nbrConsommations, setNbrConsommations] = useState(0)
 
     const getDepenseByCarId = async (immatriculation: string) => {
         const depenses = await getDepensesByPeriod([immatriculation], THIS_MONTH)
-        setMontant(depenses.reduce((acc, dep) => acc + dep.montant, 0))
 
+        const typeReparation = types.find(type => type.libelle.toLowerCase().includes("Réparation".toLowerCase()))
+        const typeConsommation = types.find(type => type.libelle.toLowerCase().includes("Consommation".toLowerCase()))
+        
+        setMontant(depenses.reduce((acc, dep) => acc + dep.montant, 0))
+        setNbrReparations(depenses.filter(dep => dep.type_depense === typeReparation?._id).length)
+        setNbrConsommations(depenses.filter(dep => dep.type_depense === typeConsommation?._id).length)
     }
 
     useEffect(() => {
-        getDepenseByCarId(car._id)
-    }, [])
+        if (types.length) {
+            getDepenseByCarId(car._id)
+        }
+    }, [types])
 
     return (
         <TouchableOpacity
@@ -63,10 +74,10 @@ const CarCard: FC<Props> = ({ onPress, car }) => {
             <View className="flex-row justify-between">
                 <Text
                     className='text-xs'
-                    style={{ fontFamily: FONTS.Regular, opacity: 0.8 }}>02 Réparations</Text>
+                    style={{ fontFamily: FONTS.Regular, opacity: 0.8 }}>{nbrReparations.toString().length < 2 ? `0${nbrReparations}`: nbrReparations} Réparations</Text>
                 <Text
                     className='text-xs'
-                    style={{ fontFamily: FONTS.Regular, opacity: 0.8 }}>03 Chargements</Text>
+                    style={{ fontFamily: FONTS.Regular, opacity: 0.8 }}>{nbrConsommations.toString().length < 2 ? `0${nbrConsommations}`: nbrConsommations} Consommations</Text>
             </View>
         </TouchableOpacity>
     )
