@@ -1,7 +1,7 @@
 
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import React, { FC, useEffect, useState } from 'react'
-import { Car, Depense, Model } from '../types'
+import { Car} from '../types'
 import { FONTS } from '../Constants/Font'
 import { COLORS } from '../Constants/Colors'
 import useDepense from '../hooks/useDepense'
@@ -52,7 +52,7 @@ const CarCard: FC<Props> = ({ onPress, car }) => {
                     className="h-full w-full"
                 />
             </View>
-            <View className="flex-row mt-2 space-x-1 justify-start items-center">
+           <View className="flex-row mt-2 space-x-1 justify-start items-center">
                 <Text
                     className='text-sm'
                     style={{ fontFamily: FONTS.SemiBold, opacity: 0.8 }}>
@@ -64,7 +64,7 @@ const CarCard: FC<Props> = ({ onPress, car }) => {
                     * {car._id}
                 </Text>
             </View>
-            <Text
+             <Text
                 className='text-xs mt-1'
                 style={{ fontFamily: FONTS.SemiBold, color: COLORS.thirdth, opacity: 0.8 }}>
                 {montant} Fcfa ce mois</Text>
